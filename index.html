@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dice Table</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50,15 85,35 50,55 15,35' fill='%23f7f0e1' stroke='%23caa24d' stroke-width='2'/%3E%3Cpolygon points='50,55 85,35 85,70 50,90' fill='%23e3cf9a' stroke='%23caa24d' stroke-width='2'/%3E%3Cpolygon points='15,35 50,55 50,90 15,70' fill='%23cfc3a5' stroke='%23caa24d' stroke-width='2'/%3E%3Ccircle cx='50' cy='35' r='4' fill='%233a1f52'/%3E%3Ccircle cx='58.75' cy='58.75' r='3.4' fill='%233a1f52'/%3E%3Ccircle cx='67.5' cy='62.5' r='3.4' fill='%233a1f52'/%3E%3Ccircle cx='76.25' cy='66.25' r='3.4' fill='%233a1f52'/%3E%3Ccircle cx='25.5' cy='51.5' r='3.4' fill='%233a1f52'/%3E%3Ccircle cx='39.5' cy='73.5' r='3.4' fill='%233a1f52'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%231a0e2a'/%3E%3Cpolygon points='50,18 82,36 50,54 18,36' fill='%23f7f0e1' stroke='%23caa24d' stroke-width='2'/%3E%3Cpolygon points='50,54 82,36 82,68 50,86' fill='%23e3cf9a' stroke='%23caa24d' stroke-width='2'/%3E%3Cpolygon points='18,36 50,54 50,86 18,68' fill='%23cfc3a5' stroke='%23caa24d' stroke-width='2'/%3E%3Ccircle cx='50' cy='36' r='3.8' fill='%233a1f52'/%3E%3Ccircle cx='58' cy='57' r='3.2' fill='%233a1f52'/%3E%3Ccircle cx='65.5' cy='60.5' r='3.2' fill='%233a1f52'/%3E%3Ccircle cx='73' cy='64' r='3.2' fill='%233a1f52'/%3E%3Ccircle cx='27' cy='50' r='3.2' fill='%233a1f52'/%3E%3Ccircle cx='40' cy='70' r='3.2' fill='%233a1f52'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --felt-1: #2b1740;
+    --felt-2: #1a0e2a;
+    --felt-edge: #150a20;
+    --gold: #caa24d;
+    --gold-light: #ecd9a3;
+    --gold-dark: #8a6c2c;
+    --ivory: #f7f0e1;
+    --ink: #1c1128;
+    --pip: #3a1f52;
+    --glow: rgba(202,162,77,0.55);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% -10%, #3a2255 0%, #0e0716 65%);
+    font-family: 'Inter', sans-serif;
+    color: var(--ivory);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 16px;
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: 900px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .marquee {
+    text-align: center;
+    flex: 0 0 auto;
+    margin-bottom: 12px;
+  }
+
+  .marquee h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 26px;
+    letter-spacing: 0.5px;
+    margin: 0 0 4px;
+    color: var(--gold-light);
+    text-shadow: 0 0 24px var(--glow);
+  }
+
+  .marquee p {
+    margin: 0;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gold-dark);
+  }
+
+  .table-frame {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 10px;
+    border-radius: 30px;
+    background: linear-gradient(160deg, #3a2b12, #1c140a 45%, #3a2b12);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.05);
+  }
+
+  .table-felt {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 22px;
+    background:
+      radial-gradient(ellipse at 50% 50%, var(--felt-1) 0%, var(--felt-2) 72%, var(--felt-edge) 100%);
+    border: 2px solid var(--gold-dark);
+    outline: 1px solid rgba(202,162,77,0.35);
+    outline-offset: -10px;
+    overflow: hidden;
+    touch-action: none;
+  }
+
+  .watermark {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 220px;
+    color: var(--gold);
+    opacity: 0.05;
+    pointer-events: none;
+    font-family: 'Playfair Display', serif;
+    user-select: none;
+  }
+
+  .row {
+    position: absolute;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    z-index: 4;
+  }
+
+  .row.top { top: 34px; }
+  .row.bottom { bottom: 34px; }
+
+  .slot {
+    width: 44px;
+    height: 44px;
+    border: 1.5px dashed var(--gold-dark);
+    border-radius: 8px;
+    background: rgba(202,162,77,0.05);
+    transition: border-color .15s, box-shadow .15s, background .15s;
+  }
+
+  .slot.active {
+    border-color: var(--gold-light);
+    border-style: solid;
+    background: rgba(202,162,77,0.16);
+    box-shadow: 0 0 16px var(--glow);
+  }
+
+  .center-controls {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .reset-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 16px;
+    border-radius: 999px;
+    background: rgba(20,12,30,0.55);
+    border: 1px solid var(--gold-dark);
+    color: var(--gold-light);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: border-color .15s, box-shadow .15s, transform .1s;
+  }
+  .reset-btn:hover { border-color: var(--gold-light); box-shadow: 0 0 14px var(--glow); }
+  .reset-btn:active { transform: scale(0.97); }
+  .reset-btn svg { width: 15px; height: 15px; }
+
+  .roll-row-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1.5px solid var(--gold-dark);
+    background: rgba(20,12,30,0.5);
+    color: var(--gold-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    transition: border-color .15s, box-shadow .15s, transform .1s;
+  }
+  .roll-row-btn:hover { border-color: var(--gold-light); box-shadow: 0 0 12px var(--glow); }
+  .roll-row-btn:active { transform: scale(0.94); }
+  .roll-row-btn svg { width: 16px; height: 16px; }
+
+  .spawn-zone {
+    width: 106px;
+    height: 82px;
+    border-radius: 14px;
+    border: 1.5px dashed var(--gold-dark);
+    background: rgba(20,12,30,0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    user-select: none;
+    transition: border-color .15s, box-shadow .15s, transform .1s;
+  }
+  .spawn-zone:hover { border-color: var(--gold-light); box-shadow: 0 0 18px var(--glow); }
+  .spawn-zone:active { transform: scale(0.97); }
+  .spawn-zone .die-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    background: var(--ivory);
+    border: 1.5px solid var(--gold);
+    position: relative;
+  }
+  .spawn-zone .die-icon span {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--pip);
+    margin: -2.5px;
+  }
+  .spawn-zone .label {
+    font-size: 11.5px;
+    letter-spacing: 0.4px;
+    color: var(--gold-light);
+    text-align: center;
+    line-height: 1.35;
+  }
+
+  .die {
+    position: absolute;
+    width: 46px;
+    height: 46px;
+    background: var(--ivory);
+    border: 1.5px solid var(--gold);
+    border-radius: 9px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.4);
+    cursor: grab;
+    touch-action: none;
+    transition: transform .12s ease;
+    overflow: hidden;
+  }
+  .die:active { cursor: grabbing; }
+  .die .dot {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    margin: -4px;
+    border-radius: 50%;
+    background: var(--pip);
+    pointer-events: none;
+  }
+  .die .face-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+
+  .counter {
+    position: absolute;
+    z-index: 30;
+    width: 92px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 8px 10px;
+    border-radius: 14px;
+    background: rgba(20,12,30,0.55);
+    border: 1.5px solid var(--gold-dark);
+  }
+  .counter.left { left: 16px; top: 50%; transform: translateY(-50%); }
+  .counter.right { right: 16px; top: 50%; transform: translateY(-50%); }
+
+  .counter-label {
+    font-size: 11px;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--gold-dark);
+  }
+
+  .counter-value {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 34px;
+    color: var(--gold-light);
+    line-height: 1;
+    cursor: pointer;
+    user-select: none;
+    text-shadow: 0 0 14px var(--glow);
+    padding: 2px 10px;
+    border-radius: 8px;
+    transition: background .12s;
+  }
+  .counter-value:hover { background: rgba(202,162,77,0.12); }
+  .counter-value:active { background: rgba(202,162,77,0.22); }
+
+  .counter-hint {
+    display: none;
+  }
+
+  .info-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .info-icon {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid var(--gold-dark);
+    color: var(--gold-dark);
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    transition: border-color .15s, color .15s;
+  }
+  .info-wrap:hover .info-icon { border-color: var(--gold-light); color: var(--gold-light); }
+
+  .tooltip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15,9,22,0.96);
+    border: 1px solid var(--gold-dark);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 11px;
+    line-height: 1.4;
+    color: var(--gold-light);
+    white-space: nowrap;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .12s ease;
+    z-index: 100;
+  }
+  .info-wrap:hover .tooltip {
+    opacity: 1;
+    pointer-events: auto;
+    transition: opacity .12s ease .45s;
+  }
+
+  .input-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .counter-input {
+    width: 54px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    text-align: center;
+    background: rgba(247,240,225,0.08);
+    border: 1px solid var(--gold-dark);
+    border-radius: 6px;
+    color: var(--ivory);
+    padding: 4px 2px;
+    outline: none;
+  }
+  .counter-input:focus { border-color: var(--gold-light); box-shadow: 0 0 8px var(--glow); }
+  .counter-input::placeholder { color: rgba(247,240,225,0.4); }
+
+  .recycle-btn {
+    flex: 0 0 auto;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    border: 1px solid var(--gold-dark);
+    background: rgba(247,240,225,0.05);
+    color: var(--gold-light);
+    font-size: 13px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    transition: border-color .15s, box-shadow .15s, transform .1s;
+  }
+  .recycle-btn:hover { border-color: var(--gold-light); box-shadow: 0 0 10px var(--glow); }
+  .recycle-btn:active { transform: scale(0.94); }
+
+  @media (max-width: 640px) {
+    .marquee h1 { font-size: 20px; }
+    .watermark { font-size: 120px; }
+    .counter { width: 76px; padding: 9px 6px 8px; }
+    .counter-value { font-size: 26px; }
+    .counter.left { left: 8px; }
+    .counter.right { right: 8px; }
+  }
+
+  .customize-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 16px;
+    border-radius: 999px;
+    background: rgba(20,12,30,0.55);
+    border: 1px solid var(--gold-dark);
+    color: var(--gold-light);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: border-color .15s, box-shadow .15s, transform .1s;
+  }
+  .customize-btn:hover { border-color: var(--gold-light); box-shadow: 0 0 14px var(--glow); }
+  .customize-btn:active { transform: scale(0.97); }
+  .customize-btn svg { width: 15px; height: 15px; }
+
+  .customize-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,6,16,0.72);
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+  }
+  .customize-overlay.open { display: flex; }
+
+  .customize-panel {
+    width: 100%;
+    max-width: 420px;
+    background: linear-gradient(160deg, #2b1740, #1a0e2a 70%);
+    border: 1.5px solid var(--gold-dark);
+    border-radius: 18px;
+    padding: 18px 20px 20px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.55);
+  }
+
+  .customize-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .customize-header span {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--gold-light);
+  }
+
+  .icon-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    border: 1px solid var(--gold-dark);
+    background: transparent;
+    color: var(--gold-light);
+    font-size: 16px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .icon-btn:hover { border-color: var(--gold-light); box-shadow: 0 0 10px var(--glow); }
+
+  .face-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .face-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .face-preview {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    background: var(--ivory);
+    border: 1.5px solid var(--gold);
+    border-radius: 9px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .face-preview:hover { border-color: var(--gold-light); box-shadow: 0 0 12px var(--glow); }
+  .face-preview .dot {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    margin: -3.5px;
+    border-radius: 50%;
+    background: var(--pip);
+  }
+  .face-preview .face-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .face-num {
+    font-size: 11px;
+    color: var(--gold-dark);
+    letter-spacing: 0.4px;
+  }
+
+  .customize-actions {
+    display: flex;
+    justify-content: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="marquee">
+    <h1>dice gameDev</h1>
+    <p>Tap the well to draw &middot; drag freely &middot; double-click to roll</p>
+  </div>
+
+  <div class="table-frame">
+    <div class="table-felt" id="tableFelt">
+      <div class="watermark">&#9830;</div>
+
+      <div class="row top" id="topRow"></div>
+      <div class="row bottom" id="bottomRow"></div>
+
+      <div class="counter left">
+        <div class="counter-label">Player 1</div>
+        <div class="counter-value" id="p1Value" role="button" tabindex="0" aria-label="Player 1 score">0</div>
+        <div class="input-row">
+          <input class="counter-input" id="p1Input" type="text" inputmode="numeric" placeholder="Set">
+          <button class="recycle-btn" id="p1Recycle" aria-label="Reset player 1 score">&#9851;</button>
+        </div>
+        <div class="info-wrap">
+          <span class="info-icon" aria-hidden="true">i</span>
+          <div class="tooltip">Click +1 &middot; right-click -1<br>type a number to set it</div>
+        </div>
+      </div>
+
+      <div class="counter right">
+        <div class="counter-label">Player 2</div>
+        <div class="counter-value" id="p2Value" role="button" tabindex="0" aria-label="Player 2 score">0</div>
+        <div class="input-row">
+          <input class="counter-input" id="p2Input" type="text" inputmode="numeric" placeholder="Set">
+          <button class="recycle-btn" id="p2Recycle" aria-label="Reset player 2 score">&#9851;</button>
+        </div>
+        <div class="info-wrap">
+          <span class="info-icon" aria-hidden="true">i</span>
+          <div class="tooltip">Click +1 &middot; right-click -1<br>type a number to set it</div>
+        </div>
+      </div>
+
+      <div class="center-controls">
+        <button class="reset-btn" id="resetBtn" aria-label="Reset table">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="1 4 1 10 7 10"></polyline>
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+          </svg>
+          Reset table
+        </button>
+
+        <div class="spawn-zone" id="spawnZone" role="button" tabindex="0" aria-label="Draw a new die">
+          <div class="die-icon" id="spawnIcon"></div>
+          <div class="label">Draw a die</div>
+        </div>
+
+        <button class="customize-btn" id="customizeBtn" aria-label="Customize dice faces">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <path d="M21 15l-5-5L5 21"></path>
+          </svg>
+          Custom faces
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="customize-overlay" id="customizeOverlay">
+  <div class="customize-panel">
+    <div class="customize-header">
+      <span>Customize dice faces</span>
+      <button class="icon-btn" id="closeCustomize" aria-label="Close">&times;</button>
+    </div>
+    <div class="face-grid" id="faceGrid"></div>
+    <div class="customize-actions">
+      <button class="reset-btn" id="clearFacesBtn" style="border-radius: 999px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="1 4 1 10 7 10"></polyline>
+          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+        </svg>
+        Reset to pips
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const felt = document.getElementById('tableFelt');
+  const spawnZone = document.getElementById('spawnZone');
+  const spawnIcon = document.getElementById('spawnIcon');
+  const resetBtn = document.getElementById('resetBtn');
+  const topRow = document.getElementById('topRow');
+  const bottomRow = document.getElementById('bottomRow');
+  const customizeBtn = document.getElementById('customizeBtn');
+  const customizeOverlay = document.getElementById('customizeOverlay');
+  const closeCustomize = document.getElementById('closeCustomize');
+  const clearFacesBtn = document.getElementById('clearFacesBtn');
+  const faceGrid = document.getElementById('faceGrid');
+
+  const dotPos = { a:[50,50], b:[24,24], c:[76,24], d:[24,76], e:[76,76], f:[24,50], g:[76,50] };
+  const faceMap = {
+    1:['a'], 2:['b','e'], 3:['b','a','e'], 4:['b','c','d','e'],
+    5:['b','c','a','d','e'], 6:['b','c','f','g','d','e']
+  };
+
+  function dotsHTML(val){
+    return faceMap[val].map(function(k){
+      var p = dotPos[k];
+      return '<span class="dot" style="left:'+p[0]+'%; top:'+p[1]+'%;"></span>';
+    }).join('');
+  }
+
+  var faceImages = { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null };
+
+  function faceHTML(val){
+    if (faceImages[val]) return '<img class="face-img" src="' + faceImages[val] + '" alt="">';
+    return dotsHTML(val);
+  }
+
+  spawnIcon.innerHTML = dotsHTML(3);
+
+  for (var fv = 1; fv <= 6; fv++) {
+    (function(faceVal){
+      var slot = document.createElement('div');
+      slot.className = 'face-slot';
+
+      var preview = document.createElement('div');
+      preview.className = 'face-preview';
+      preview.id = 'facePreview' + faceVal;
+      preview.innerHTML = dotsHTML(faceVal);
+
+      var input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.hidden = true;
+
+      var label = document.createElement('span');
+      label.className = 'face-num';
+      label.textContent = 'Face ' + faceVal;
+
+      preview.addEventListener('click', function(){ input.click(); });
+      input.addEventListener('change', function(){
+        var file = input.files && input.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function(){
+          faceImages[faceVal] = reader.result;
+          preview.innerHTML = '<img class="face-img" src="' + reader.result + '" alt="">';
+          refreshAllDice();
+        };
+        reader.readAsDataURL(file);
+      });
+
+      slot.appendChild(preview);
+      slot.appendChild(label);
+      slot.appendChild(input);
+      faceGrid.appendChild(slot);
+    })(fv);
+  }
+
+  function refreshAllDice(){
+    dice.forEach(function(d){ d.innerHTML = faceHTML(d.dataset.value); });
+  }
+
+  customizeBtn.addEventListener('click', function(){ customizeOverlay.classList.add('open'); });
+  closeCustomize.addEventListener('click', function(){ customizeOverlay.classList.remove('open'); });
+  customizeOverlay.addEventListener('click', function(e){
+    if (e.target === customizeOverlay) customizeOverlay.classList.remove('open');
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') customizeOverlay.classList.remove('open');
+  });
+  clearFacesBtn.addEventListener('click', function(){
+    for (var fv2 = 1; fv2 <= 6; fv2++) {
+      faceImages[fv2] = null;
+      var p = document.getElementById('facePreview' + fv2);
+      if (p) p.innerHTML = dotsHTML(fv2);
+    }
+    refreshAllDice();
+  });
+
+  var topSlots = [];
+  var bottomSlots = [];
+  function makeSlot(){
+    var s = document.createElement('div');
+    s.className = 'slot';
+    s.occupied = false;
+    s.dieRef = null;
+    return s;
+  }
+  for (var i = 0; i < 5; i++) {
+    var ts = makeSlot(); topRow.appendChild(ts); topSlots.push(ts);
+    var bs = makeSlot(); bottomRow.appendChild(bs); bottomSlots.push(bs);
+  }
+
+  var rollIconSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+    '<path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>' +
+    '<path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>';
+
+  function makeRollButton(label){
+    var b = document.createElement('button');
+    b.className = 'roll-row-btn';
+    b.setAttribute('aria-label', label);
+    b.innerHTML = rollIconSVG;
+    return b;
+  }
+  var p1RollBtn = makeRollButton('Roll player 1 slotted dice');
+  var p2RollBtn = makeRollButton('Roll player 2 slotted dice');
+  topRow.appendChild(p1RollBtn);
+  bottomRow.appendChild(p2RollBtn);
+
+  var zCounter = 50;
+  var dice = [];
+
+  function allSlots(){ return [].slice.call(topRow.querySelectorAll('.slot')).concat([].slice.call(bottomRow.querySelectorAll('.slot'))); }
+  function clearHighlights(){ allSlots().forEach(function(s){ s.classList.remove('active'); }); }
+
+  function nearestSlot(die){
+    var dr = die.getBoundingClientRect();
+    var dcx = dr.left + dr.width / 2, dcy = dr.top + dr.height / 2;
+    var nearest = null, nd = Infinity;
+    allSlots().forEach(function(slot){
+      var r = slot.getBoundingClientRect();
+      var scx = r.left + r.width / 2, scy = r.top + r.height / 2;
+      var dist = Math.hypot(dcx - scx, dcy - scy);
+      if (dist < nd) { nd = dist; nearest = slot; }
+    });
+    return { nearest: nearest, dist: nd };
+  }
+
+  function attachDieHandlers(die){
+    var dragging = false, offX = 0, offY = 0;
+
+    die.addEventListener('pointerdown', function(e){
+      dragging = true;
+      if (die.assignedSlot) {
+        die.assignedSlot.occupied = false;
+        die.assignedSlot.dieRef = null;
+        die.assignedSlot = null;
+      }
+      die.dataset.inSlot = '0';
+      die.setPointerCapture(e.pointerId);
+      die.style.zIndex = ++zCounter;
+      var rect = die.getBoundingClientRect();
+      offX = e.clientX - rect.left;
+      offY = e.clientY - rect.top;
+    });
+
+    die.addEventListener('pointermove', function(e){
+      if (!dragging) return;
+      var feltRect = felt.getBoundingClientRect();
+      var nx = e.clientX - feltRect.left - offX;
+      var ny = e.clientY - feltRect.top - offY;
+      nx = Math.max(0, Math.min(nx, feltRect.width - die.offsetWidth));
+      ny = Math.max(0, Math.min(ny, feltRect.height - die.offsetHeight));
+      die.style.left = nx + 'px';
+      die.style.top = ny + 'px';
+      var info = nearestSlot(die);
+      clearHighlights();
+      if (info.nearest && info.dist < 40) info.nearest.classList.add('active');
+    });
+
+    die.addEventListener('pointerup', function(){
+      if (!dragging) return;
+      dragging = false;
+      var info = nearestSlot(die);
+      if (info.nearest && info.dist < 40) {
+        var feltRect = felt.getBoundingClientRect();
+        var r = info.nearest.getBoundingClientRect();
+        var cx = r.left + r.width / 2 - feltRect.left;
+        var cy = r.top + r.height / 2 - feltRect.top;
+        die.style.left = (cx - die.offsetWidth / 2) + 'px';
+        die.style.top = (cy - die.offsetHeight / 2) + 'px';
+        die.dataset.inSlot = '1';
+        die.dataset.slotRow = topRow.contains(info.nearest) ? 'top' : 'bottom';
+        info.nearest.occupied = true;
+        info.nearest.dieRef = die;
+        die.assignedSlot = info.nearest;
+      }
+      clearHighlights();
+    });
+
+    die.addEventListener('dblclick', function(){ rollDie(die); });
+  }
+
+  function makeDie(x, y, slotEl){
+    var val = 1 + Math.floor(Math.random() * 6);
+    var die = document.createElement('div');
+    die.className = 'die';
+    die.dataset.value = val;
+    die.style.left = x + 'px';
+    die.style.top = y + 'px';
+    die.style.zIndex = ++zCounter;
+    die.innerHTML = faceHTML(val);
+    felt.appendChild(die);
+    attachDieHandlers(die);
+    dice.push(die);
+    if (slotEl) {
+      die.dataset.inSlot = '1';
+      die.dataset.slotRow = topRow.contains(slotEl) ? 'top' : 'bottom';
+      slotEl.occupied = true;
+      slotEl.dieRef = die;
+      die.assignedSlot = slotEl;
+    }
+    return die;
+  }
+
+  function rollDie(die){
+    if (die.dataset.rolling === '1') return;
+    die.dataset.rolling = '1';
+    var ticks = 0, maxTicks = 10;
+    var interval = setInterval(function(){
+      var v = 1 + Math.floor(Math.random() * 6);
+      die.innerHTML = faceHTML(v);
+      die.style.transform = 'rotate(' + Math.round(Math.random() * 40 - 20) + 'deg)';
+      ticks++;
+      if (ticks >= maxTicks) {
+        clearInterval(interval);
+        var finalVal = 1 + Math.floor(Math.random() * 6);
+        die.dataset.value = finalVal;
+        die.innerHTML = faceHTML(finalVal);
+        die.style.transform = 'rotate(0deg)';
+        die.dataset.rolling = '0';
+      }
+    }, 50);
+  }
+
+  var fillTurn = 'top';
+
+  function firstEmpty(slots){
+    for (var i = 0; i < slots.length; i++) {
+      if (!slots[i].occupied) return slots[i];
+    }
+    return null;
+  }
+
+  function slotCenter(slotEl){
+    var feltRect = felt.getBoundingClientRect();
+    var r = slotEl.getBoundingClientRect();
+    return {
+      x: r.left + r.width / 2 - feltRect.left,
+      y: r.top + r.height / 2 - feltRect.top
+    };
+  }
+
+  function spawnFromZone(){
+    var topEmpty = firstEmpty(topSlots);
+    var bottomEmpty = firstEmpty(bottomSlots);
+
+    if (topEmpty || bottomEmpty) {
+      var targetSlot, usedRow;
+      if (fillTurn === 'top') {
+        targetSlot = topEmpty || bottomEmpty;
+        usedRow = topEmpty ? 'top' : 'bottom';
+      } else {
+        targetSlot = bottomEmpty || topEmpty;
+        usedRow = bottomEmpty ? 'bottom' : 'top';
+      }
+      fillTurn = (usedRow === 'top') ? 'bottom' : 'top';
+      var c = slotCenter(targetSlot);
+      makeDie(c.x - 23, c.y - 23, targetSlot);
+      return;
+    }
+
+    var feltRect = felt.getBoundingClientRect();
+    var margin = 16;
+    var exclRects = [document.querySelector('.center-controls'), p1RollBtn, p2RollBtn].map(function(el){
+      var r = el.getBoundingClientRect();
+      return {
+        left: r.left - feltRect.left - margin,
+        top: r.top - feltRect.top - margin,
+        right: r.right - feltRect.left + margin,
+        bottom: r.bottom - feltRect.top + margin
+      };
+    });
+    var dieSize = 46;
+    var maxX = feltRect.width - dieSize - 4;
+    var maxY = feltRect.height - dieSize - 4;
+    var x, y, tries = 0, overlaps;
+    do {
+      x = 4 + Math.random() * Math.max(1, maxX - 4);
+      y = 4 + Math.random() * Math.max(1, maxY - 4);
+      overlaps = exclRects.some(function(excl){
+        return x < excl.right && (x + dieSize) > excl.left && y < excl.bottom && (y + dieSize) > excl.top;
+      });
+      tries++;
+    } while (overlaps && tries < 40);
+    makeDie(x, y);
+  }
+
+  spawnZone.addEventListener('click', spawnFromZone);
+  spawnZone.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); spawnFromZone(); }
+  });
+
+  resetBtn.addEventListener('click', function(){
+    dice.forEach(function(d){ d.remove(); });
+    dice = [];
+    topSlots.concat(bottomSlots).forEach(function(s){ s.occupied = false; s.dieRef = null; });
+    fillTurn = 'top';
+    clearHighlights();
+  });
+
+  p1RollBtn.addEventListener('click', function(){
+    dice.forEach(function(d){
+      if (d.dataset.inSlot === '1' && d.dataset.slotRow === 'top') rollDie(d);
+    });
+  });
+
+  p2RollBtn.addEventListener('click', function(){
+    dice.forEach(function(d){
+      if (d.dataset.inSlot === '1' && d.dataset.slotRow === 'bottom') rollDie(d);
+    });
+  });
+
+  function setupCounter(valueEl, inputEl, recycleBtn){
+    var count = 0;
+
+    function render(){ valueEl.textContent = count; }
+
+    function bump(delta){
+      count += delta;
+      render();
+    }
+
+    function setTo(n){
+      if (!isNaN(n)) { count = Math.trunc(n); render(); }
+    }
+
+    valueEl.addEventListener('click', function(){ bump(1); });
+
+    valueEl.addEventListener('contextmenu', function(e){
+      e.preventDefault();
+      bump(-1);
+    });
+
+    valueEl.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); bump(1); }
+    });
+
+    recycleBtn.addEventListener('click', function(){ setTo(0); });
+
+    function commitInput(){
+      var n = parseInt(inputEl.value, 10);
+      if (!isNaN(n)) setTo(n);
+      inputEl.value = '';
+    }
+    inputEl.addEventListener('keydown', function(e){
+      if (e.key === 'Enter') { e.preventDefault(); commitInput(); inputEl.blur(); }
+    });
+    inputEl.addEventListener('blur', function(){
+      if (inputEl.value !== '') commitInput();
+    });
+
+    render();
+  }
+
+  setupCounter(document.getElementById('p1Value'), document.getElementById('p1Input'), document.getElementById('p1Recycle'));
+  setupCounter(document.getElementById('p2Value'), document.getElementById('p2Input'), document.getElementById('p2Recycle'));
+})();
+</script>
+</body>
+</html>
