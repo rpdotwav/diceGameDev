@@ -772,8 +772,13 @@
 
       <hr class="rules-divider">
 
-      <h3>V2 &mdash; Overgrowth variant</h3>
-      <p>Toggle with the <strong>V1/V2</strong> button. The die changes to <strong>1 Botanist, 3 Deathcaps, 2 Serums</strong> &mdash; but the lone botanist is an expert: every serum die locked banks <strong>2 serums</strong> instead of 1. Expect bigger jackpots, nastier losses, and a swingier race. Switching versions restarts the current turn.</p>
+      <h3>Versions &mdash; escalating infestation</h3>
+      <p>Cycle with the <strong>V1/V2/V3</strong> button (this restarts the current turn):</p>
+      <ul>
+        <li><strong>V1 &mdash; Outbreak:</strong> the classic die, 2 Botanist / 2 Deathcap / 2 Serum. Locks bank 1 serum each. The steady race.</li>
+        <li><strong>V2 &mdash; Overgrowth:</strong> 1 Botanist / 3 Deathcap / 2 Serum, but every locked serum die banks <strong>2</strong>. Bigger jackpots, nastier losses.</li>
+        <li><strong>V3 &mdash; Full Bloom:</strong> 1 Botanist / 4 Deathcap / 1 Serum, and every locked serum die banks <strong>4</strong>. Nearly half your turns will bleed serums &mdash; but a single lucky pairing can win the game outright. Pure chaos.</li>
+      </ul>
     </div>
   </div>
 </div>
@@ -958,7 +963,8 @@
 
   var MODES = {
     1: { faces: ['botanist','botanist','plant','plant','serum','serum'], bankMult: 1 },
-    2: { faces: ['botanist','plant','plant','plant','serum','serum'], bankMult: 2 }
+    2: { faces: ['botanist','plant','plant','plant','serum','serum'], bankMult: 2 },
+    3: { faces: ['botanist','plant','plant','plant','plant','serum'], bankMult: 4 }
   };
   var gameMode = 1;
 
@@ -1204,14 +1210,17 @@
 
   var modeBtn = document.getElementById('modeBtn');
   var modeLabel = document.getElementById('modeLabel');
+  var modeBlurbs = {
+    1: 'V1: classic 2/2/2 die',
+    2: 'V2: 1 botanist, 3 deathcaps \u2014 locks bank 2',
+    3: 'V3: 1 botanist, 4 deathcaps \u2014 locks bank 4'
+  };
   modeBtn.addEventListener('click', function(){
     if (isAnimating) return;
-    gameMode = gameMode === 1 ? 2 : 1;
+    gameMode = gameMode % 3 + 1;
     modeLabel.textContent = 'V' + gameMode;
     startTurn();
-    gameResultEl.textContent = gameMode === 2
-      ? 'V2: 1 botanist, 3 deathcaps \u2014 locks bank 2'
-      : 'V1: classic 2/2/2 die';
+    gameResultEl.textContent = modeBlurbs[gameMode];
   });
 
   startTurn();
