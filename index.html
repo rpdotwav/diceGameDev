@@ -641,6 +641,15 @@
         </svg>
         Rules
       </button>
+      <button class="chip-btn" id="modeBtn" aria-label="Switch game version">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="17 1 21 5 17 9"></polyline>
+          <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+          <polyline points="7 23 3 19 7 15"></polyline>
+          <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+        </svg>
+        <span id="modeLabel">V1</span>
+      </button>
     </div>
   </div>
 
@@ -753,13 +762,18 @@
       <ul>
         <li>Botanists and Serums together make up to <strong>min(Botanists, Serums)</strong> Serums lockable.</li>
         <li>Total Serum = secured in Phase 1 + lockable from this roll.</li>
-        <li><strong>Points this turn = max(0, Total Serum &minus; Deathcaps in this roll)</strong>.</li>
+        <li><strong>Points this turn = Total Serum &minus; Deathcaps in this roll</strong>. If Deathcaps outnumber your serums, the difference is <em>subtracted from your score</em> &mdash; but your score never drops below zero.</li>
       </ul>
 
       <hr class="rules-divider">
 
       <h3>Console operation</h3>
       <p>Tap <strong>Roll</strong> to see the dice, then <strong>Resolve</strong> to lock in the outcome &mdash; every roll takes both taps. When Phase 2 resolves, hit <strong>Secure &amp; pass</strong> to add the points to the active survivor and hand the breaker to the other one.</p>
+
+      <hr class="rules-divider">
+
+      <h3>V2 &mdash; Overgrowth variant</h3>
+      <p>Toggle with the <strong>V1/V2</strong> button. The die changes to <strong>1 Botanist, 3 Deathcaps, 2 Serums</strong> &mdash; but the lone botanist is an expert: every serum die locked banks <strong>2 serums</strong> instead of 1. Expect bigger jackpots, nastier losses, and a swingier race. Switching versions restarts the current turn.</p>
     </div>
   </div>
 </div>
@@ -807,7 +821,11 @@
     inputEl.addEventListener('blur', function(){ if (inputEl.value !== '') commitInput(); });
 
     render();
-    return { addPoints: function(n){ bump(n); }, getCount: function(){ return count; } };
+    return {
+      addPoints: function(n){ bump(n); },
+      applyScore: function(n){ setTo(Math.max(0, count + n)); },
+      getCount: function(){ return count; }
+    };
   }
 
   var counters = {
@@ -938,6 +956,12 @@
 
   var phaseNames = { 1: 'Phase 1 \u00b7 Harvest', 2: 'Phase 2 \u00b7 Extraction' };
 
+  var MODES = {
+    1: { faces: ['botanist','botanist','plant','plant','serum','serum'], bankMult: 1 },
+    2: { faces: ['botanist','plant','plant','plant','serum','serum'], bankMult: 2 }
+  };
+  var gameMode = 1;
+
   var gamePhase = 1;
   var gameHandArr = [];
   var bankedSerum = 0;
@@ -946,8 +970,8 @@
   var awaitingResolve = false;
 
   function randomFace(){
-    var faces = ['botanist', 'plant', 'serum'];
-    return faces[Math.floor(Math.random() * 3)];
+    var faces = MODES[gameMode].faces;
+    return faces[Math.floor(Math.random() * 6)];
   }
   function makeHand(n, rolled){
     var arr = [];
@@ -1080,10 +1104,11 @@
     if (B >= 1 && S >= 1) {
       var lockCount = Math.min(B, S);
       var lockIdxs = indexesOfLastN('serum', lockCount);
-      gameResultEl.textContent = lockCount + (lockCount === 1 ? ' serum secured' : ' serums secured');
+      var secured = lockCount * MODES[gameMode].bankMult;
+      gameResultEl.textContent = secured + (secured === 1 ? ' serum secured' : ' serums secured');
       animateRemoval(lockIdxs, 'locking', function(){
         removeFaces(gameHandArr, 'serum', lockCount);
-        bankedSerum += lockCount;
+        bankedSerum += lockCount * MODES[gameMode].bankMult;
         renderGameStatus();
         if (!endPhase1Hand()) renderGameHand();
         finishResolve();
@@ -1123,12 +1148,16 @@
     var S2 = countFace(gameHandArr, 'serum');
     var P2 = countFace(gameHandArr, 'plant');
     var lockable = Math.min(B2, S2);
-    var total = bankedSerum + lockable;
-    pendingPoints = Math.max(0, total - P2);
+    var total = bankedSerum + lockable * MODES[gameMode].bankMult;
+    pendingPoints = total - P2;
 
     var lockIdxs = indexesOfLastN('serum', lockable);
     animateRemoval(lockIdxs, 'locking', function(){
-      gameResultEl.textContent = 'Extraction yield: ' + pendingPoints + (pendingPoints === 1 ? ' serum' : ' serums');
+      if (pendingPoints < 0) {
+        gameResultEl.textContent = 'The rot claims ' + Math.abs(pendingPoints) + (pendingPoints === -1 ? ' serum' : ' serums');
+      } else {
+        gameResultEl.textContent = 'Extraction yield: ' + pendingPoints + (pendingPoints === 1 ? ' serum' : ' serums');
+      }
       phase2Rolled = true;
       rollHandBtn.disabled = true;
       scoreTurnBtn.disabled = false;
@@ -1168,9 +1197,21 @@
   });
 
   scoreTurnBtn.addEventListener('click', function(){
-    counters[currentTurn].addPoints(pendingPoints);
+    counters[currentTurn].applyScore(pendingPoints);
     toggleTurn();
     startTurn();
+  });
+
+  var modeBtn = document.getElementById('modeBtn');
+  var modeLabel = document.getElementById('modeLabel');
+  modeBtn.addEventListener('click', function(){
+    if (isAnimating) return;
+    gameMode = gameMode === 1 ? 2 : 1;
+    modeLabel.textContent = 'V' + gameMode;
+    startTurn();
+    gameResultEl.textContent = gameMode === 2
+      ? 'V2: 1 botanist, 3 deathcaps \u2014 locks bank 2'
+      : 'V1: classic 2/2/2 die';
   });
 
   startTurn();
