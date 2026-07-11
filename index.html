@@ -5,848 +5,417 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Deathcap">
-<title>Deathcap — A Carnivorous Fungus Feature</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20shape-rendering%3D%22crispEdges%22%3E%3Crect%20width%3D%2216%22%20height%3D%2216%22%20rx%3D%222.5%22%20fill%3D%22%230b0f0a%22%2F%3E%3Cg%3E%3Crect%20x%3D%226%22%20y%3D%221%22%20width%3D%224%22%20height%3D%221%22%20fill%3D%22%23e04f56%22%2F%3E%3Crect%20x%3D%224%22%20y%3D%222%22%20width%3D%228%22%20height%3D%221%22%20fill%3D%22%23e04f56%22%2F%3E%3Crect%20x%3D%223%22%20y%3D%223%22%20width%3D%2210%22%20height%3D%221%22%20fill%3D%22%23e04f56%22%2F%3E%3Crect%20x%3D%222%22%20y%3D%224%22%20width%3D%2212%22%20height%3D%222%22%20fill%3D%22%23e04f56%22%2F%3E%3Crect%20x%3D%222%22%20y%3D%226%22%20width%3D%2212%22%20height%3D%221%22%20fill%3D%22%23a3323a%22%2F%3E%3Crect%20x%3D%224%22%20y%3D%223%22%20width%3D%222%22%20height%3D%221%22%20fill%3D%22%23d8d4c3%22%2F%3E%3Crect%20x%3D%229%22%20y%3D%222%22%20width%3D%222%22%20height%3D%221%22%20fill%3D%22%23d8d4c3%22%2F%3E%3Crect%20x%3D%2211%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23d8d4c3%22%2F%3E%3Crect%20x%3D%224%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23d8d4c3%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%227%22%20width%3D%224%22%20height%3D%227%22%20fill%3D%22%23d8d4c3%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%2213%22%20width%3D%226%22%20height%3D%221%22%20fill%3D%22%23d8d4c3%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%228%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%230a0f08%22%2F%3E%3Crect%20x%3D%229%22%20y%3D%228%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%230a0f08%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2210%22%20width%3D%224%22%20height%3D%221%22%20fill%3D%22%230a0f08%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2211%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%230a0f08%22%2F%3E%3Crect%20x%3D%229%22%20y%3D%2211%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%230a0f08%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%2214%22%20width%3D%226%22%20height%3D%221%22%20fill%3D%22%23a3323a%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
-<link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAAABmJLR0QA/wD/AP+gvaeTAAACoElEQVR4nO3dvW0UURhA0VlEgCBwIWQQOiFBJNTgDogdEFMBrZAgEiTkCEFGBVCEI6ABrhdpnubP58Sj9Vvp+gvem5k9Pbl4PMG/PFh7AWyXOEjiIImDJA6SOEjiIImDJA6SOEgP117AMD9evF57CdM0TU8/f1h7CcOYHCRxkMRBEgdJHCRxkMRBEgdJHCRxkE4buft8I5vfZ92+ezP/Qx69fX/3BRvZgzc5SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYO00NnK2aOT+WcWZw8sjmSZwxeTgyQOkjhI4iCJgyQOkjhI4iCJgyQO0oDt8708VbAdZ88K5h8FDNlfNzlI4iCJgyQOkjhI4iCJgyQOkjhI4iBt5cX4C+wob8devovJQRIHSRwkcZDEQRIHSRwkcZDEQRIHacD2+Zefv+Z/yHR1PeBDGMrkIImDJA6SOEjiIImDJA6SOEjiIImDJA7SVn50eL5vNx/XXsI0TdPzy1drL2EYk4MkDpI4SOIgiYMkDpI4SOIgiYMkDtJxts//TL/PXvP95tPMv/Ls8uXdF5wO9P92nG/CcOIgiYMkDpI4SOIgiYMkDpI4SOIgHWf73N3nw5kcJHGQxEESB0kcJHGQxEESB0kcJHGQjrN9/j93ny/A3efcC+IgiYMkDpI4SOIgiYMkDpI4SOIgiYM04EeHd2SBN/sciclBEgdJHCRxkMRBEgdJHCRxkMRBEgfpOI8meLPPcCYHSRwkcZDEQRIHSRwkcZDEQRIHSRyk3Wyfb2R3fIi9bLGbHCRxkMRBEgdJHCRxkMRBEgdJHCRxkHbz8pavV9drL+HeMTlI4iCJgyQOkjhI4iCJgyQOkjhI4iCJg7SbRxNYnslBEgdJHCRxkMRBEgdJHCRxkMRBEgfpL7QENwmxqtgFAAAAAElFTkSuQmCC">
+<meta name="apple-mobile-web-app-title" content="Deathcap 3D">
+<title>Deathcap 3D — A Carnivorous Fungus Feature</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --void: #070b06;
-    --panel: #10160e;
-    --panel-2: #161f13;
-    --line: #2a3624;
-    --line-strong: #45573a;
     --toxin: #b8e63f;
     --toxin-dim: #7a9c2a;
     --maw: #e04f56;
     --serum: #5fd8c9;
     --bone: #d8d4c3;
     --ash: #7d8672;
+    --line: #2a3624;
+    --line-strong: #45573a;
     --glow-toxin: rgba(184,230,63,0.45);
     --glow-serum: rgba(95,216,201,0.4);
     --glow-maw: rgba(224,79,86,0.4);
   }
+  *{ box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; width:100%; height:100%; overflow:hidden;
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--bone);
+    background:linear-gradient(180deg, #050a05 0%, #0d1a0c 40%, #1c2e14 75%, #2c4018 100%);
+    -webkit-user-select:none; user-select:none;
+    -webkit-touch-callout:none; -webkit-tap-highlight-color:transparent;
+    overscroll-behavior:none;
+  }
+  input{ -webkit-user-select:text; user-select:text; }
+  #canvas-wrap{ position:fixed; inset:0; }
+  canvas{ display:block; touch-action:none; cursor:grab; }
+  canvas.dragging{ cursor:grabbing; }
 
-  * { box-sizing: border-box; }
-
-  html, body {
-    margin: 0;
-    height: 100vh;
-    height: 100dvh;
-    overflow: hidden;
-    overscroll-behavior: none;
-    touch-action: manipulation;
-    -webkit-user-select: none;
-    user-select: none;
-    -webkit-touch-callout: none;
-    -webkit-tap-highlight-color: transparent;
+  #glow-layer{
+    position:fixed; inset:0; pointer-events:none; z-index:2;
+    background:radial-gradient(circle at 50% 30%, rgba(184,230,63,0.10), transparent 50%);
+  }
+  #pandemic-vignette{
+    position:fixed; inset:0; pointer-events:none; z-index:10;
+    opacity:0; transition:opacity 1.2s ease;
     background:
-      radial-gradient(ellipse 120% 60% at 50% -10%, #16220f 0%, transparent 55%),
-      radial-gradient(ellipse 100% 50% at 50% 115%, #1a0d10 0%, transparent 50%),
-      var(--void);
-    font-family: 'IBM Plex Mono', monospace;
-    color: var(--bone);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: max(10px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+      radial-gradient(ellipse 75% 68% at 50% 50%, transparent 52%, rgba(224,79,86,0.18) 78%, rgba(160,20,30,0.5) 100%);
+    backdrop-filter:blur(0px);
+  }
+  #pandemic-vignette::before{
+    content:'';
+    position:absolute; inset:0;
+    background:radial-gradient(ellipse 70% 62% at 50% 50%, transparent 58%, rgba(224,79,86,0.22) 100%);
+    animation:vignettePulse 2.6s ease-in-out infinite;
+  }
+  @keyframes vignettePulse{
+    0%,100%{ opacity:0.45; }
+    50%{ opacity:1; }
+  }
+  body.pandemic #pandemic-vignette{ opacity:1; }
+  /* edge blur strips — cheap "wounded FPS" softening of the periphery */
+  .vg-blur{
+    position:absolute; pointer-events:none;
+    backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);
+    -webkit-mask-image:linear-gradient(var(--dir), rgba(0,0,0,1), rgba(0,0,0,0));
+    mask-image:linear-gradient(var(--dir), rgba(0,0,0,1), rgba(0,0,0,0));
+  }
+  .vg-blur.t{ --dir:180deg; top:0; left:0; right:0; height:11%; }
+  .vg-blur.b{ --dir:0deg; bottom:0; left:0; right:0; height:11%; }
+  .vg-blur.l{ --dir:90deg; top:0; bottom:0; left:0; width:9%; }
+  .vg-blur.r{ --dir:270deg; top:0; bottom:0; right:0; width:9%; }
+
+  #scanlines{
+    position:fixed; inset:0; pointer-events:none; z-index:60;
+    background:repeating-linear-gradient(0deg, rgba(0,0,0,0.14) 0 1px, transparent 1px 3px);
+    opacity:0.45;
   }
 
-  input, textarea { -webkit-user-select: text; user-select: text; }
+  /* ---------- HUD chrome ---------- */
+  .hud{ position:fixed; z-index:20; }
 
-  /* faint global scanlines */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background: repeating-linear-gradient(0deg, rgba(0,0,0,0.16) 0 1px, transparent 1px 3px);
-    opacity: 0.5;
-    z-index: 5000;
+  #head{
+    top:calc(10px + env(safe-area-inset-top)); left:14px;
+    pointer-events:none;
   }
-
-  /* drifting spores */
-  .spores { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
-  .spores span {
-    position: absolute;
-    bottom: -20px;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--toxin);
-    opacity: 0;
-    filter: blur(1px);
-    box-shadow: 0 0 8px 2px rgba(184,230,63,0.35);
-    animation: sporeRise linear infinite;
+  #head .eyebrow{
+    font-size:9px; letter-spacing:2.4px; text-transform:uppercase; color:var(--toxin-dim);
+    margin-bottom:2px;
   }
-  @keyframes sporeRise {
-    0%   { transform: translateY(0) translateX(0) scale(0.6); opacity: 0; }
-    12%  { opacity: 0.5; }
-    85%  { opacity: 0.3; }
-    100% { transform: translateY(-105vh) translateX(var(--sway, 30px)) scale(1.1); opacity: 0; }
-  }
-  .spores span:nth-child(1)  { left: 8%;  animation-duration: 14s; animation-delay: 0s;   --sway: 40px;  width: 4px; height: 4px; }
-  .spores span:nth-child(2)  { left: 22%; animation-duration: 18s; animation-delay: 3s;   --sway: -30px; }
-  .spores span:nth-child(3)  { left: 35%; animation-duration: 12s; animation-delay: 6s;   --sway: 25px;  width: 3px; height: 3px; }
-  .spores span:nth-child(4)  { left: 48%; animation-duration: 20s; animation-delay: 1.5s; --sway: -45px; }
-  .spores span:nth-child(5)  { left: 61%; animation-duration: 15s; animation-delay: 8s;   --sway: 35px;  width: 6px; height: 6px; }
-  .spores span:nth-child(6)  { left: 73%; animation-duration: 17s; animation-delay: 4s;   --sway: -20px; width: 3px; height: 3px; }
-  .spores span:nth-child(7)  { left: 85%; animation-duration: 13s; animation-delay: 10s;  --sway: 30px; }
-  .spores span:nth-child(8)  { left: 93%; animation-duration: 19s; animation-delay: 2s;   --sway: -35px; width: 4px; height: 4px; }
-  .spores span:nth-child(9)  { left: 15%; animation-duration: 16s; animation-delay: 12s;  --sway: 20px;  background: var(--maw); box-shadow: 0 0 8px 2px rgba(224,79,86,0.3); }
-  .spores span:nth-child(10) { left: 55%; animation-duration: 21s; animation-delay: 7s;   --sway: -25px; background: var(--maw); box-shadow: 0 0 8px 2px rgba(224,79,86,0.3); width: 3px; height: 3px; }
-  @media (prefers-reduced-motion: reduce) { .spores { display: none; } }
-
-  .console {
-    position: relative;
-    width: 100%;
-    max-width: 480px;
-    max-height: 100%;
-    display: flex;
-    flex-direction: column;
-    background: linear-gradient(175deg, rgba(22,31,19,0.88) 0%, rgba(9,14,7,0.94) 100%);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--line-strong);
-    border-radius: 20px;
-    box-shadow:
-      0 0 0 1px rgba(0,0,0,0.7),
-      0 34px 80px rgba(0,0,0,0.8),
-      0 4px 16px rgba(0,0,0,0.5),
-      inset 0 1px 0 rgba(184,230,63,0.14),
-      inset 0 0 60px rgba(184,230,63,0.03);
-    padding: 16px 16px 18px;
-    gap: 13px;
-    overflow: hidden;
-  }
-
-  /* creeping vine corners */
-  .console::before, .console::after {
-    content: '';
-    position: absolute;
-    width: 130px;
-    height: 130px;
-    pointer-events: none;
-    opacity: 0.5;
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M2 2c30 4 38 20 40 44M2 2c16 26 8 40 26 58M2 2c44-2 60 12 66 34' fill='none' stroke='%233f5230' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M42 46c5-2 9 1 9 6-6 2-9-1-9-6zM28 60c5 0 8 4 6 9-6 0-8-4-6-9zM68 36c5-1 9 2 8 7-6 1-9-2-8-7z' fill='%233f5230'/%3E%3C/svg%3E");
-  }
-  .console::before { top: -6px; left: -6px; }
-  .console::after { bottom: -6px; right: -6px; transform: rotate(180deg); }
-
-  /* ---------- Header ---------- */
-  .head {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 10px;
-    position: relative;
-    z-index: 2;
-  }
-  .head-id { min-width: 0; }
-  .head-eyebrow {
-    font-size: 10px;
-    letter-spacing: 2.5px;
-    color: var(--toxin-dim);
-    text-transform: uppercase;
-    margin-bottom: 3px;
-  }
-  .head-title {
-    font-family: 'Chakra Petch', sans-serif;
-    font-weight: 700;
-    font-size: 34px;
-    line-height: 1;
-    letter-spacing: 2.5px;
-    color: var(--maw);
+  #head h1{
+    margin:0;
+    font-family:'Chakra Petch', sans-serif; font-weight:700;
+    font-size:26px; line-height:1; letter-spacing:2px; text-transform:uppercase;
+    color:var(--maw);
+    transform:rotate(-1.2deg); transform-origin:left bottom;
     text-shadow:
-      0 1px 0 #a3323a,
-      0 2px 0 #8a262e,
-      0 3px 0 #701c23,
-      0 4px 0 #571318,
-      0 5px 0 #3e0b0f,
-      0 7px 10px rgba(0,0,0,0.7),
-      0 0 26px var(--glow-maw);
-    text-transform: uppercase;
-    transform: rotate(-1.2deg);
-    transform-origin: left bottom;
-    margin: 0;
+      0 1px 0 #a3323a, 0 2px 0 #8a262e, 0 3px 0 #701c23, 0 4px 0 #571318,
+      0 6px 8px rgba(0,0,0,0.7), 0 0 22px var(--glow-maw);
   }
-  .head-sub {
-    font-size: 10px;
-    letter-spacing: 1.4px;
-    color: var(--ash);
-    text-transform: uppercase;
-    margin-top: 4px;
+  #head .sub{
+    font-size:9px; letter-spacing:1.3px; text-transform:uppercase; color:var(--ash); margin-top:4px;
   }
-  .head-btns { display: flex; flex-direction: column; gap: 7px; flex: 0 0 auto; align-items: stretch; }
-  .head-btns .chip-btn { justify-content: flex-start; }
 
-  .chip-btn {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    min-height: 40px;
-    padding: 8px 13px;
-    background: linear-gradient(180deg, #223018 0%, #131c0e 100%);
-    border: 1px solid var(--line-strong);
-    border-radius: 10px;
-    color: var(--bone);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11.5px;
-    font-weight: 500;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    cursor: pointer;
-    box-shadow: 0 3px 0 #060a05, 0 5px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(184,230,63,0.16);
-    transition: border-color .15s, box-shadow .12s, transform .1s, filter .15s;
+  #chips{
+    top:calc(10px + env(safe-area-inset-top)); right:12px;
+    display:flex; flex-direction:column; gap:6px; align-items:stretch;
   }
-  .chip-btn:hover { border-color: var(--toxin-dim); filter: brightness(1.12); }
-  .chip-btn:active {
-    transform: translateY(2px);
-    box-shadow: 0 1px 0 #060a05, 0 2px 6px rgba(0,0,0,0.4), inset 0 1px 0 rgba(184,230,63,0.12);
+  .chip-btn{
+    display:flex; align-items:center; gap:6px;
+    min-height:36px; padding:7px 11px;
+    background:linear-gradient(180deg, rgba(34,48,24,0.9), rgba(19,28,14,0.92));
+    border:1px solid var(--line-strong); border-radius:9px;
+    color:var(--bone);
+    font-family:'IBM Plex Mono', monospace; font-size:10.5px; font-weight:500;
+    letter-spacing:1px; text-transform:uppercase; cursor:pointer;
+    box-shadow:0 3px 0 #060a05, 0 5px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(184,230,63,0.16);
+    transition:border-color .15s, box-shadow .12s, transform .1s, filter .15s;
   }
-  .chip-btn svg { width: 14px; height: 14px; flex: 0 0 auto; }
+  .chip-btn:hover{ border-color:var(--toxin-dim); filter:brightness(1.12); }
+  .chip-btn:active{ transform:translateY(2px); box-shadow:0 1px 0 #060a05, inset 0 1px 0 rgba(184,230,63,0.12); }
+  .chip-btn svg{ width:13px; height:13px; flex:0 0 auto; }
 
-  /* ---------- Hazard turn breaker ---------- */
-  .breaker {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 10px 12px;
+  /* ---------- Turn breaker ---------- */
+  #breaker{
+    top:calc(10px + env(safe-area-inset-top)); left:50%; transform:translateX(-50%);
+    display:flex; align-items:center; gap:10px;
+    padding:8px 12px;
     background:
       repeating-linear-gradient(-45deg, rgba(184,230,63,0.06) 0 10px, transparent 10px 20px),
-      var(--panel-2);
-    border: 1px solid var(--line-strong);
-    border-radius: 10px;
-    position: relative;
-    z-index: 2;
+      linear-gradient(180deg, rgba(22,31,19,0.92), rgba(10,15,8,0.94));
+    border:1px solid var(--line-strong); border-radius:10px;
+    box-shadow:0 4px 14px rgba(0,0,0,0.5), inset 0 1px 0 rgba(184,230,63,0.12);
   }
-  .breaker-side {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
+  .brk-name{
+    font-family:'Chakra Petch', sans-serif; font-weight:600;
+    font-size:11px; letter-spacing:1.4px; text-transform:uppercase; color:var(--ash);
+    transition:color .2s, text-shadow .2s;
   }
-  .breaker-side.right { align-items: flex-end; text-align: right; }
-  .breaker-name {
-    font-family: 'Chakra Petch', sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    letter-spacing: 1.5px;
-    color: var(--ash);
-    text-transform: uppercase;
-    transition: color .2s, text-shadow .2s;
+  .brk-name.live{ color:var(--toxin); text-shadow:0 0 10px var(--glow-toxin); }
+  .brk-switch{
+    position:relative; width:64px; height:30px; border-radius:16px;
+    background:#060906; border:1px solid var(--line-strong);
+    box-shadow:inset 0 3px 8px rgba(0,0,0,0.9); cursor:pointer; flex:0 0 auto;
   }
-  .breaker-side.live .breaker-name { color: var(--toxin); text-shadow: 0 0 10px var(--glow-toxin); }
-  .breaker-tag { font-size: 9px; letter-spacing: 1.5px; color: var(--line-strong); text-transform: uppercase; }
-  .breaker-side.live .breaker-tag { color: var(--toxin-dim); }
-
-  .breaker-switch {
-    position: relative;
-    flex: 0 0 auto;
-    width: 84px;
-    height: 40px;
-    border-radius: 20px;
-    background: #060906;
-    border: 1px solid var(--line-strong);
-    box-shadow: inset 0 3px 8px rgba(0,0,0,0.9);
-    cursor: pointer;
+  .brk-knob{
+    position:absolute; top:3px; left:3px; width:22px; height:22px; border-radius:50%;
+    background:radial-gradient(circle at 34% 28%, #e6ffa0, var(--toxin) 45%, #5c7a1c 100%);
+    box-shadow:0 2px 6px rgba(0,0,0,0.7), 0 0 12px var(--glow-toxin);
+    transition:left .22s cubic-bezier(.34,1.56,.64,1);
   }
-  .breaker-knob {
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background:
-      radial-gradient(circle at 34% 28%, #e6ffa0, var(--toxin) 45%, #5c7a1c 100%);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.7), 0 0 12px var(--glow-toxin);
-    transition: left .22s cubic-bezier(.34,1.56,.64,1);
-  }
-  .breaker-switch.right .breaker-knob { left: 48px; }
-  .breaker-led {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #1c240f;
-    transition: background .2s, box-shadow .2s;
-  }
-  .breaker-led.l { left: 11px; }
-  .breaker-led.r { right: 11px; }
-  .breaker-led.lit { background: var(--toxin); box-shadow: 0 0 9px 2px var(--glow-toxin); }
+  .brk-switch.right .brk-knob{ left:37px; }
 
   /* ---------- Counters ---------- */
-  .counters-row {
-    display: flex;
-    gap: 12px;
-    position: relative;
-    z-index: 2;
+  .counter{
+    position:fixed; z-index:20;
+    display:flex; flex-direction:column; align-items:center; gap:5px;
+    padding:10px 10px 9px; width:96px;
+    background:linear-gradient(175deg, rgba(30,42,24,0.82), rgba(13,19,10,0.9));
+    border:1px solid var(--line); border-radius:13px;
+    box-shadow:0 6px 16px rgba(0,0,0,0.45), inset 0 1px 0 rgba(184,230,63,0.12);
+    transition:border-color .25s, box-shadow .25s, transform .25s;
   }
-  .counter {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 7px;
-    padding: 12px 8px 11px;
-    background: linear-gradient(175deg, rgba(30,42,24,0.7), rgba(13,19,10,0.85));
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    box-shadow:
-      0 6px 16px rgba(0,0,0,0.45),
-      inset 0 1px 0 rgba(184,230,63,0.12),
-      inset 0 -10px 18px rgba(0,0,0,0.3);
-    transition: border-color .25s, box-shadow .25s, transform .25s;
+  .counter.live{
+    border-color:var(--toxin-dim);
+    box-shadow:0 8px 20px rgba(0,0,0,0.5), 0 0 20px rgba(184,230,63,0.15), inset 0 1px 0 rgba(184,230,63,0.2);
+    transform:translateY(-2px);
   }
-  .counter.live {
-    border-color: var(--toxin-dim);
-    box-shadow:
-      0 8px 20px rgba(0,0,0,0.5),
-      0 0 20px rgba(184,230,63,0.15),
-      inset 0 1px 0 rgba(184,230,63,0.2),
-      inset 0 -10px 18px rgba(0,0,0,0.3);
-    transform: translateY(-2px);
+  #counterP1{ left:12px; top:calc(84px + env(safe-area-inset-top)); }
+  #counterP2{ left:116px; top:calc(84px + env(safe-area-inset-top)); }
+  .counter-label{ font-size:9px; letter-spacing:1.6px; text-transform:uppercase; color:var(--ash); }
+  .counter-value{
+    font-family:'Chakra Petch', sans-serif; font-weight:700; font-size:34px; line-height:1;
+    background:linear-gradient(180deg, #e8fffb 0%, var(--serum) 45%, #2e8c81 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    filter:drop-shadow(0 0 10px var(--glow-serum)) drop-shadow(0 2px 2px rgba(0,0,0,0.6));
+    cursor:pointer; padding:2px 8px; transition:transform .12s;
   }
-  .counter-label {
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--ash);
+  .counter-value:hover{ transform:scale(1.06); }
+  .counter-value:active{ transform:scale(0.96); }
+  .input-row{ display:flex; align-items:center; gap:5px; }
+  .counter-input{
+    width:40px; min-height:26px;
+    font-family:'IBM Plex Mono', monospace; font-size:11px; text-align:center;
+    background:rgba(0,0,0,0.4); border:1px solid var(--line); border-radius:6px;
+    color:var(--bone); padding:3px 2px; outline:none;
   }
-  .counter-value {
-    font-family: 'Chakra Petch', sans-serif;
-    font-weight: 700;
-    font-size: 44px;
-    line-height: 1;
-    background: linear-gradient(180deg, #e8fffb 0%, var(--serum) 45%, #2e8c81 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    filter: drop-shadow(0 0 12px var(--glow-serum)) drop-shadow(0 2px 2px rgba(0,0,0,0.6));
-    cursor: pointer;
-    padding: 2px 14px;
-    border-radius: 8px;
-    transition: transform .12s;
+  .counter-input:focus{ border-color:var(--serum); box-shadow:0 0 8px var(--glow-serum); }
+  .counter-input::placeholder{ color:var(--ash); opacity:0.7; }
+  .recycle-btn{
+    flex:0 0 auto; width:26px; height:26px; border-radius:6px;
+    border:1px solid var(--line); background:rgba(0,0,0,0.3); color:var(--bone);
+    font-size:11px; line-height:1; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; padding:0; transition:border-color .15s, transform .08s;
   }
-  .counter-value:hover { transform: scale(1.06); }
-  .counter-value:active { transform: scale(0.96); }
-  .input-row { display: flex; align-items: center; gap: 6px; }
-  .counter-input {
-    width: 56px;
-    min-height: 32px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    text-align: center;
-    background: rgba(0,0,0,0.4);
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    color: var(--bone);
-    padding: 4px 2px;
-    outline: none;
-  }
-  .counter-input:focus { border-color: var(--serum); box-shadow: 0 0 8px var(--glow-serum); }
-  .counter-input::placeholder { color: var(--ash); opacity: 0.7; }
-  .recycle-btn {
-    flex: 0 0 auto;
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
-    border: 1px solid var(--line);
-    background: rgba(0,0,0,0.3);
-    color: var(--bone);
-    font-size: 13px;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    padding: 0;
-    transition: border-color .15s, box-shadow .15s, transform .08s;
-  }
-  .recycle-btn:hover { border-color: var(--toxin-dim); box-shadow: 0 0 8px rgba(184,230,63,0.2); }
-  .recycle-btn:active { transform: scale(0.93); }
+  .recycle-btn:hover{ border-color:var(--toxin-dim); }
+  .recycle-btn:active{ transform:scale(0.93); }
 
-  .info-wrap { position: relative; display: flex; align-items: center; justify-content: center; }
-  .info-icon {
-    width: 16px; height: 16px; border-radius: 50%;
-    border: 1px solid var(--line-strong); color: var(--ash);
-    font-size: 10px; font-weight: 600;
-    display: flex; align-items: center; justify-content: center;
-    cursor: default; transition: border-color .15s, color .15s;
+  /* ---------- Bottom console ---------- */
+  #console{
+    position:fixed; z-index:20;
+    left:50%; transform:translateX(-50%);
+    bottom:calc(12px + env(safe-area-inset-bottom));
+    width:min(440px, calc(100% - 20px));
+    display:flex; flex-direction:column; gap:8px; align-items:center;
+    padding:12px 14px 13px;
+    background:linear-gradient(175deg, rgba(22,31,19,0.9), rgba(9,14,7,0.94));
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border:1px solid var(--line-strong); border-radius:16px;
+    box-shadow:0 14px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(184,230,63,0.14);
   }
-  .info-wrap:hover .info-icon { border-color: var(--toxin-dim); color: var(--toxin); }
-  .tooltip {
-    position: absolute; bottom: calc(100% + 8px); left: 50%;
-    transform: translateX(-50%);
-    background: #050805; border: 1px solid var(--line-strong);
-    border-radius: 7px; padding: 8px 10px; font-size: 10.5px; line-height: 1.5;
-    color: var(--bone); white-space: nowrap; text-align: center;
-    opacity: 0; pointer-events: none; transition: opacity .12s ease; z-index: 100;
+  #game-status.extraction, #game-status.extraction .sep{
+    color:var(--serum) !important;
+    text-shadow:0 0 12px var(--glow-serum);
   }
-  .info-wrap:hover .tooltip { opacity: 1; pointer-events: auto; transition: opacity .12s ease .45s; }
-
-  /* ---------- Specimen containment window ---------- */
-  .containment {
-    position: relative;
-    z-index: 2;
-    border: 1px solid var(--line-strong);
-    border-radius: 12px;
-    background:
-      radial-gradient(ellipse 90% 120% at 50% 0%, rgba(184,230,63,0.05) 0%, transparent 55%),
-      #0a0f08;
-    padding: 14px 12px 15px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 11px;
-    overflow: hidden;
+  #game-result.extraction{
+    color:var(--serum);
+    text-shadow:0 0 12px var(--glow-serum);
   }
-  .containment::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(0deg, rgba(184,230,63,0.03) 0 2px, transparent 2px 5px);
-    pointer-events: none;
+  #game-status{
+    display:flex; align-items:center; gap:8px;
+    font-size:10px; letter-spacing:1.7px; text-transform:uppercase;
+    color:var(--toxin); text-shadow:0 0 10px var(--glow-toxin);
   }
-  /* corner brackets */
-  .containment .bracket {
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    border: 2px solid var(--toxin-dim);
-    opacity: 0.8;
+  #game-status .sep{ color:var(--line-strong); text-shadow:none; }
+  #game-banked{ font-size:10px; letter-spacing:1.4px; text-transform:uppercase; color:var(--ash); }
+  #rotPressure{
+    margin-left:10px;
+    color:var(--maw);
+    text-shadow:0 0 8px var(--glow-maw);
+    font-weight:600;
   }
-  .bracket.tl { top: 6px; left: 6px; border-right: none; border-bottom: none; }
-  .bracket.tr { top: 6px; right: 6px; border-left: none; border-bottom: none; }
-  .bracket.bl { bottom: 6px; left: 6px; border-right: none; border-top: none; }
-  .bracket.br { bottom: 6px; right: 6px; border-left: none; border-top: none; }
-
-  .game-status {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 11px;
-    letter-spacing: 1.8px;
-    text-transform: uppercase;
-    color: var(--toxin);
-    text-shadow: 0 0 10px var(--glow-toxin);
+  #game-banked strong{
+    font-family:'Chakra Petch', sans-serif; font-size:13px; color:var(--serum);
+    text-shadow:0 0 10px var(--glow-serum); margin-left:4px;
   }
-  .game-status .sep { color: var(--line-strong); text-shadow: none; }
-
-  .game-hand {
-    display: flex;
-    justify-content: center;
-    gap: 13px;
-    position: relative;
-    perspective: 800px;
-    padding-bottom: 8px;
+  #game-result.pandemic{
+    color:var(--maw) !important;
+    text-shadow:0 0 14px var(--glow-maw) !important;
   }
-  .die-scene {
-    --hs: 29px;
-    width: 58px;
-    height: 58px;
-    position: relative;
-    transform-style: preserve-3d;
+  #game-result{
+    min-height:18px; text-align:center;
+    font-family:'Chakra Petch', sans-serif; font-weight:600; font-size:13.5px; letter-spacing:0.5px;
+    color:var(--toxin); text-shadow:0 0 12px var(--glow-toxin);
   }
-  .die-scene::after {
-    content: '';
-    position: absolute;
-    left: 8%;
-    right: 8%;
-    bottom: -9px;
-    height: 8px;
-    border-radius: 50%;
-    background: radial-gradient(ellipse, rgba(0,0,0,0.55) 0%, transparent 70%);
-    transform: translateZ(-40px);
+  #actions{ display:flex; gap:10px; width:100%; }
+  .action-btn{
+    flex:1; min-height:48px;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    padding:10px 12px;
+    background:linear-gradient(180deg, #2a3a1e 0%, #1a2612 45%, #121a0c 100%);
+    border:1px solid #43552f; border-radius:12px;
+    color:var(--bone);
+    font-family:'Chakra Petch', sans-serif; font-weight:700; font-size:13px;
+    letter-spacing:1.7px; text-transform:uppercase; cursor:pointer;
+    box-shadow:0 5px 0 #060a05, 0 9px 20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(184,230,63,0.25), inset 0 -8px 14px rgba(0,0,0,0.35);
+    text-shadow:0 1px 2px rgba(0,0,0,0.7);
+    transition:border-color .15s, box-shadow .12s, transform .1s, color .15s, filter .15s;
   }
-  .die-cube {
-    position: absolute;
-    inset: 0;
-    transform-style: preserve-3d;
-    transform: rotateX(-10deg) rotateY(14deg);
+  .action-btn:hover{ border-color:var(--toxin-dim); color:var(--toxin); filter:brightness(1.12); }
+  .action-btn:active{
+    transform:translateY(4px);
+    box-shadow:0 1px 0 #060a05, 0 3px 8px rgba(0,0,0,0.5), inset 0 1px 0 rgba(184,230,63,0.2);
   }
-  .cube-face {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(155deg, #212e18 0%, #131b0e 55%, #0a0f08 100%);
-    border: 1px solid var(--line-strong);
-    border-radius: 9px;
-    box-shadow: inset 0 1px 0 rgba(184,230,63,0.16), inset 0 -6px 12px rgba(0,0,0,0.45);
-    overflow: hidden;
+  .action-btn:disabled{
+    opacity:0.4; cursor:default; transform:none; filter:none; color:var(--bone);
+    border-color:var(--line-strong);
+    box-shadow:0 3px 0 #060a05, inset 0 1px 0 rgba(184,230,63,0.1);
   }
-  .cube-face::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(115deg, rgba(255,255,255,0.09) 0%, transparent 38%);
-    pointer-events: none;
+  @keyframes pulseToxin{
+    0%,100%{ box-shadow:0 5px 0 #060a05, 0 9px 20px rgba(0,0,0,0.6), 0 0 0 0 var(--glow-toxin), inset 0 1px 0 rgba(184,230,63,0.25); }
+    50%{ box-shadow:0 5px 0 #060a05, 0 9px 20px rgba(0,0,0,0.6), 0 0 22px 5px var(--glow-toxin), inset 0 1px 0 rgba(184,230,63,0.25); }
   }
-  .f-front  { transform: translateZ(var(--hs)); }
-  .f-back   { transform: rotateY(180deg) translateZ(var(--hs)); }
-  .f-right  { transform: rotateY(90deg) translateZ(var(--hs)); filter: brightness(0.75); }
-  .f-left   { transform: rotateY(-90deg) translateZ(var(--hs)); filter: brightness(0.6); }
-  .f-top    { transform: rotateX(90deg) translateZ(var(--hs)); filter: brightness(1.15); }
-  .f-bottom { transform: rotateX(-90deg) translateZ(var(--hs)); filter: brightness(0.45); }
-  .cube-face svg { width: 32px; height: 32px; }
-  .cube-face .face-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .die-scene.empty {
-    border: 1px dashed var(--line);
-    border-radius: 10px;
-  }
-  .die-scene.empty::after { display: none; }
-
-  .game-banked {
-    font-size: 11px;
-    letter-spacing: 1.6px;
-    text-transform: uppercase;
-    color: var(--ash);
-  }
-  .game-banked strong {
-    font-family: 'Chakra Petch', sans-serif;
-    font-size: 15px;
-    color: var(--serum);
-    text-shadow: 0 0 10px var(--glow-serum);
-    margin-left: 4px;
-  }
-
-  .game-result {
-    min-height: 20px;
-    text-align: center;
-    font-family: 'Chakra Petch', sans-serif;
-    font-weight: 600;
-    font-size: 15px;
-    letter-spacing: 0.6px;
-    color: var(--toxin);
-    text-shadow: 0 0 12px var(--glow-toxin);
-  }
-
-  /* ---------- Actions ---------- */
-  .game-actions {
-    display: flex;
-    gap: 12px;
-    position: relative;
-    z-index: 2;
-  }
-  .action-btn {
-    flex: 1;
-    min-height: 54px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 12px 14px;
-    background: linear-gradient(180deg, #2a3a1e 0%, #1a2612 45%, #121a0c 100%);
-    border: 1px solid #43552f;
-    border-radius: 13px;
-    color: var(--bone);
-    font-family: 'Chakra Petch', sans-serif;
-    font-weight: 700;
-    font-size: 14px;
-    letter-spacing: 1.8px;
-    text-transform: uppercase;
-    cursor: pointer;
-    box-shadow:
-      0 5px 0 #060a05,
-      0 9px 20px rgba(0,0,0,0.6),
-      inset 0 1px 0 rgba(184,230,63,0.25),
-      inset 0 -8px 14px rgba(0,0,0,0.35);
-    text-shadow: 0 1px 2px rgba(0,0,0,0.7);
-    transition: border-color .15s, box-shadow .12s, transform .1s, color .15s, filter .15s;
-  }
-  .action-btn:hover {
-    border-color: var(--toxin-dim);
-    color: var(--toxin);
-    filter: brightness(1.12);
-  }
-  .action-btn:active {
-    transform: translateY(4px);
-    box-shadow:
-      0 1px 0 #060a05,
-      0 3px 8px rgba(0,0,0,0.5),
-      inset 0 1px 0 rgba(184,230,63,0.2),
-      inset 0 -4px 10px rgba(0,0,0,0.4);
-  }
-  .action-btn:disabled {
-    opacity: 0.4;
-    cursor: default;
-    transform: none;
-    filter: none;
-    color: var(--bone);
-    border-color: var(--line-strong);
-    box-shadow: 0 3px 0 #060a05, inset 0 1px 0 rgba(184,230,63,0.1);
-  }
-
-  @keyframes pulseToxin {
-    0%, 100% { box-shadow: 0 5px 0 #060a05, 0 9px 20px rgba(0,0,0,0.6), 0 0 0 0 var(--glow-toxin), inset 0 1px 0 rgba(184,230,63,0.25); }
-    50% { box-shadow: 0 5px 0 #060a05, 0 9px 20px rgba(0,0,0,0.6), 0 0 22px 5px var(--glow-toxin), inset 0 1px 0 rgba(184,230,63,0.25); }
-  }
-  .action-btn.pulse {
-    animation: pulseToxin 1.1s ease-in-out infinite;
-    border-color: var(--toxin);
-    color: var(--toxin);
-  }
-
-  /* ---------- Dice animations ---------- */
-  @keyframes cubeSpin {
-    0%   { transform: rotateX(-10deg) rotateY(14deg) translateY(0); }
-    25%  { transform: rotateX(120deg) rotateY(200deg) translateY(-14px); }
-    50%  { transform: rotateX(240deg) rotateY(380deg) translateY(-4px); }
-    75%  { transform: rotateX(300deg) rotateY(560deg) translateY(-12px); }
-    100% { transform: rotateX(350deg) rotateY(734deg) translateY(0); }
-  }
-  .die-cube.tumbling {
-    animation: cubeSpin 0.62s linear infinite;
-  }
-
-  @keyframes landSettle {
-    0%   { transform: rotateX(140deg) rotateY(230deg) translateY(-22px) scale(0.85); }
-    60%  { transform: rotateX(-24deg) rotateY(4deg) translateY(3px) scale(1.08); }
-    80%  { transform: rotateX(-4deg) rotateY(18deg) translateY(-2px) scale(0.98); }
-    100% { transform: rotateX(-10deg) rotateY(14deg) translateY(0) scale(1); }
-  }
-  .die-cube.settling { animation: landSettle 0.5s cubic-bezier(.3,1.2,.4,1) both; }
-
-  @keyframes lockFlash {
-    0%   { transform: scale(1) translateY(0); filter: drop-shadow(0 0 0 var(--glow-serum)); }
-    40%  { transform: scale(1.15) translateY(-6px); filter: drop-shadow(0 0 16px var(--glow-serum)) brightness(1.4); }
-    100% { transform: scale(0.5) translateY(-30px); opacity: 0; filter: drop-shadow(0 0 10px var(--glow-serum)); }
-  }
-  .die-scene.locking { animation: lockFlash 0.55s ease-in both; }
-  .die-scene.locking .cube-face { border-color: var(--serum); }
-
-  @keyframes eatFlash {
-    0%   { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 0 var(--glow-maw)); }
-    35%  { transform: scale(1.12) rotate(-6deg); filter: drop-shadow(0 0 16px var(--glow-maw)) brightness(1.3) saturate(1.6); }
-    100% { transform: scale(0.2) rotate(18deg) translateY(10px); opacity: 0; }
-  }
-  .die-scene.eaten { animation: eatFlash 0.55s ease-in both; }
-  .die-scene.eaten .cube-face { border-color: var(--maw); }
-
-  @media (prefers-reduced-motion: reduce) {
-    .die-cube.tumbling, .die-cube.settling, .die-scene.locking, .die-scene.eaten { animation: none; }
-    .die-scene.locking, .die-scene.eaten { opacity: 0.25; }
-  }
+  .action-btn.pulse{ animation:pulseToxin 1.1s ease-in-out infinite; border-color:var(--toxin); color:var(--toxin); }
 
   /* ---------- Modals ---------- */
-  .overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(3,5,3,0.82);
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    padding: 18px;
+  .overlay{
+    display:none; position:fixed; inset:0; z-index:100;
+    background:rgba(3,5,3,0.82);
+    align-items:center; justify-content:center; padding:18px;
   }
-  .overlay.open { display: flex; }
-  .modal {
-    width: 100%;
-    max-width: 400px;
-    max-height: 84dvh;
-    display: flex;
-    flex-direction: column;
-    background: linear-gradient(175deg, var(--panel), #0a0f08);
-    border: 1px solid var(--line-strong);
-    border-radius: 12px;
-    padding: 16px 18px 18px;
-    box-shadow: 0 26px 70px rgba(0,0,0,0.8), inset 0 1px 0 rgba(184,230,63,0.08);
+  .overlay.open{ display:flex; }
+  .modal{
+    width:100%; max-width:400px; max-height:84dvh;
+    display:flex; flex-direction:column;
+    background:linear-gradient(175deg, #10160e, #0a0f08);
+    border:1px solid var(--line-strong); border-radius:14px;
+    padding:16px 18px 18px;
+    box-shadow:0 26px 70px rgba(0,0,0,0.8), inset 0 1px 0 rgba(184,230,63,0.08);
   }
-  .modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 14px;
-    flex: 0 0 auto;
+  .modal-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; flex:0 0 auto; }
+  .modal-header span{
+    font-family:'Chakra Petch', sans-serif; font-weight:600; font-size:15px;
+    letter-spacing:1.5px; text-transform:uppercase; color:var(--toxin);
+    text-shadow:0 0 10px var(--glow-toxin);
   }
-  .modal-header span {
-    font-family: 'Chakra Petch', sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    letter-spacing: 1.6px;
-    text-transform: uppercase;
-    color: var(--toxin);
-    text-shadow: 0 0 10px var(--glow-toxin);
+  .icon-btn{
+    width:32px; height:32px; border-radius:7px;
+    border:1px solid var(--line-strong); background:transparent; color:var(--bone);
+    font-size:16px; line-height:1; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; padding:0; transition:border-color .15s;
   }
-  .icon-btn {
-    width: 34px; height: 34px; border-radius: 7px;
-    border: 1px solid var(--line-strong); background: transparent; color: var(--bone);
-    font-size: 17px; line-height: 1; display: flex; align-items: center; justify-content: center;
-    cursor: pointer; padding: 0; transition: border-color .15s, box-shadow .15s;
-  }
-  .icon-btn:hover { border-color: var(--toxin-dim); box-shadow: 0 0 10px rgba(184,230,63,0.2); }
+  .icon-btn:hover{ border-color:var(--toxin-dim); }
+  .modal-scroll{ overflow-y:auto; -webkit-overflow-scrolling:touch; touch-action:pan-y; min-height:0; }
 
-  .modal-scroll {
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    touch-action: pan-y;
-    min-height: 0;
+  .face-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:16px; }
+  .face-slot{ display:flex; flex-direction:column; align-items:center; gap:7px; }
+  .face-preview{
+    position:relative; width:100%; aspect-ratio:1;
+    background:linear-gradient(170deg, #141c10, #0c1109);
+    border:1px solid var(--line-strong); border-radius:10px;
+    cursor:pointer; overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+    transition:border-color .15s;
   }
+  .face-preview:hover{ border-color:var(--toxin-dim); }
+  .face-preview canvas, .face-preview img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; image-rendering:pixelated; }
+  .face-name{ font-size:9.5px; letter-spacing:1.4px; text-transform:uppercase; color:var(--ash); }
+  .modal-actions{ display:flex; justify-content:center; flex:0 0 auto; }
+  .modal-actions .action-btn{ flex:0 1 auto; min-height:40px; font-size:11px; padding:8px 16px; }
 
-  .face-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
-  .face-slot { display: flex; flex-direction: column; align-items: center; gap: 7px; }
-  .face-preview {
-    position: relative; width: 100%; aspect-ratio: 1;
-    background: linear-gradient(170deg, #141c10, #0c1109);
-    border: 1px solid var(--line-strong); border-radius: 10px;
-    cursor: pointer; overflow: hidden;
-    display: flex; align-items: center; justify-content: center;
-    transition: border-color .15s, box-shadow .15s;
+  .rules-content h3{
+    font-family:'Chakra Petch', sans-serif; font-weight:600; font-size:12px;
+    letter-spacing:1.5px; text-transform:uppercase; color:var(--toxin); margin:15px 0 6px;
   }
-  .face-preview:hover { border-color: var(--toxin-dim); box-shadow: 0 0 12px rgba(184,230,63,0.2); }
-  .face-preview svg { width: 55%; height: 55%; }
-  .face-preview .face-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .face-name {
-    font-size: 10px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--ash);
-    text-align: center;
-  }
-  .modal-actions { display: flex; justify-content: center; flex: 0 0 auto; }
-  .modal-actions .action-btn { flex: 0 1 auto; min-height: 44px; font-size: 12px; }
+  .rules-content h3:first-child{ margin-top:0; }
+  .rules-content p{ font-size:12px; line-height:1.65; color:var(--bone); margin:0 0 8px; }
+  .rules-content ul{ margin:0 0 8px; padding-left:18px; }
+  .rules-content li{ font-size:12px; line-height:1.65; color:var(--bone); margin-bottom:4px; }
+  .rules-content strong{ color:var(--serum); }
+  .rules-content em{ color:var(--maw); font-style:normal; }
+  .rules-divider{ border:none; border-top:1px dashed var(--line-strong); margin:12px 0; }
 
-  /* Rules content */
-  .rules-content h3 {
-    font-family: 'Chakra Petch', sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    letter-spacing: 1.6px;
-    text-transform: uppercase;
-    color: var(--toxin);
-    margin: 16px 0 7px;
+  #win-title{
+    font-family:'Chakra Petch', sans-serif; font-weight:700; font-size:24px;
+    letter-spacing:2px; text-transform:uppercase; text-align:center;
+    color:var(--toxin); text-shadow:0 0 22px var(--glow-toxin), 0 3px 0 #3e4d14;
+    margin:0 0 8px;
   }
-  .rules-content h3:first-child { margin-top: 0; }
-  .rules-content p { font-size: 12.5px; line-height: 1.65; color: var(--bone); margin: 0 0 9px; }
-  .rules-content ul { margin: 0 0 9px; padding-left: 18px; }
-  .rules-content li { font-size: 12.5px; line-height: 1.65; color: var(--bone); margin-bottom: 5px; }
-  .rules-content strong { color: var(--serum); }
-  .rules-content em { color: var(--maw); font-style: normal; }
-  .rules-divider { border: none; border-top: 1px dashed var(--line-strong); margin: 13px 0; }
+  #win-sub{ text-align:center; font-size:11.5px; letter-spacing:1.2px; color:var(--ash); text-transform:uppercase; margin:0 0 18px; }
 
-  @media (max-height: 720px) {
-    .console { gap: 10px; padding: 13px 14px 15px; }
-    .head-title { font-size: 25px; }
-    .counter-value { font-size: 36px; }
-    .die-scene { --hs: 25px; width: 50px; height: 50px; }
-    .cube-face svg { width: 28px; height: 28px; }
-    .action-btn { min-height: 46px; font-size: 13px; }
+  @media (max-width:560px){
+    #head h1{ font-size:20px; }
+    #head .sub{ display:none; }
+    #breaker{ top:auto; bottom:calc(178px + env(safe-area-inset-bottom)); padding:6px 10px; }
+    .brk-name{ font-size:9.5px; }
+    #counterP1{ top:calc(64px + env(safe-area-inset-top)); }
+    #counterP2{ left:102px; top:calc(64px + env(safe-area-inset-top)); }
+    .counter{ width:84px; padding:8px 8px 7px; }
+    .counter-value{ font-size:28px; }
   }
 </style>
 </head>
 <body>
 
-<div class="spores" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+<div id="canvas-wrap"></div>
+<div id="glow-layer"></div>
+<div id="pandemic-vignette" aria-hidden="true">
+  <div class="vg-blur t"></div>
+  <div class="vg-blur b"></div>
+  <div class="vg-blur l"></div>
+  <div class="vg-blur r"></div>
+</div>
+<div id="scanlines"></div>
 
-<div class="console">
-  <div class="head">
-    <div class="head-id">
-      <div class="head-eyebrow">A carnivorous fungus feature</div>
-      <h1 class="head-title">Deathcap</h1>
-      <div class="head-sub">The rot is spreading &middot; secure the antidote</div>
-    </div>
-    <div class="head-btns">
-      <button class="chip-btn" id="customizeBtn" aria-label="Customize dice faces">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="3" width="18" height="18" rx="2"></rect>
-          <circle cx="8.5" cy="8.5" r="1.5"></circle>
-          <path d="M21 15l-5-5L5 21"></path>
-        </svg>
-        Faces
-      </button>
-      <button class="chip-btn" id="rulesBtn" aria-label="How to play">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <path d="M9.5 9a2.5 2.5 0 0 1 4.7 1.2c0 1.6-2.2 1.8-2.2 3.4"></path>
-          <line x1="12" y1="17" x2="12" y2="17.01"></line>
-        </svg>
-        Rules
-      </button>
-      <button class="chip-btn" id="modeBtn" aria-label="Switch game version">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="17 1 21 5 17 9"></polyline>
-          <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
-          <polyline points="7 23 3 19 7 15"></polyline>
-          <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
-        </svg>
-        <span id="modeLabel">V1</span>
-      </button>
-    </div>
+<div class="hud" id="head">
+  <div class="eyebrow">A carnivorous fungus feature</div>
+  <h1>Deathcap 3D</h1>
+  <div class="sub">The rot is spreading &middot; drag to look around</div>
+</div>
+
+<div class="hud" id="chips">
+  <button class="chip-btn" id="customizeBtn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+    Faces
+  </button>
+  <button class="chip-btn" id="rulesBtn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.5 9a2.5 2.5 0 0 1 4.7 1.2c0 1.6-2.2 1.8-2.2 3.4"></path><line x1="12" y1="17" x2="12" y2="17.01"></line></svg>
+    Rules
+  </button>
+</div>
+
+<div class="hud" id="breaker">
+  <span class="brk-name live" id="brkP1">S-01</span>
+  <div class="brk-switch" id="turnSwitch" role="switch" aria-checked="false" tabindex="0" aria-label="Toggle whose turn it is">
+    <div class="brk-knob"></div>
   </div>
+  <span class="brk-name" id="brkP2">S-02</span>
+</div>
 
-  <div class="breaker">
-    <div class="breaker-side live" id="sideP1">
-      <span class="breaker-name">Survivor 01</span>
-      <span class="breaker-tag">Active operator</span>
-    </div>
-    <div class="breaker-switch" id="turnSwitch" role="switch" aria-checked="false" tabindex="0" aria-label="Toggle whose turn it is">
-      <span class="breaker-led l lit" id="ledP1"></span>
-      <span class="breaker-led r" id="ledP2"></span>
-      <div class="breaker-knob"></div>
-    </div>
-    <div class="breaker-side right" id="sideP2">
-      <span class="breaker-name">Survivor 02</span>
-      <span class="breaker-tag">Standing by</span>
-    </div>
+<div class="counter live" id="counterP1">
+  <div class="counter-label">Survivor 01</div>
+  <div class="counter-value" id="p1Value" role="button" tabindex="0">0</div>
+  <div class="input-row">
+    <input class="counter-input" id="p1Input" type="text" inputmode="numeric" placeholder="Set">
+    <button class="recycle-btn" id="p1Recycle" aria-label="Reset player 1 score">&#9851;</button>
   </div>
-
-  <div class="counters-row">
-    <div class="counter live" id="counterBoxP1">
-      <div class="counter-label">Serums &middot; S-01</div>
-      <div class="counter-value" id="p1Value" role="button" tabindex="0" aria-label="Player 1 score">0</div>
-      <div class="input-row">
-        <input class="counter-input" id="p1Input" type="text" inputmode="numeric" placeholder="Set">
-        <button class="recycle-btn" id="p1Recycle" aria-label="Reset player 1 score">&#9851;</button>
-      </div>
-      <div class="info-wrap">
-        <span class="info-icon" aria-hidden="true">i</span>
-        <div class="tooltip">Tap +1 &middot; right-click -1<br>type a number to set it</div>
-      </div>
-    </div>
-
-    <div class="counter" id="counterBoxP2">
-      <div class="counter-label">Serums &middot; S-02</div>
-      <div class="counter-value" id="p2Value" role="button" tabindex="0" aria-label="Player 2 score">0</div>
-      <div class="input-row">
-        <input class="counter-input" id="p2Input" type="text" inputmode="numeric" placeholder="Set">
-        <button class="recycle-btn" id="p2Recycle" aria-label="Reset player 2 score">&#9851;</button>
-      </div>
-      <div class="info-wrap">
-        <span class="info-icon" aria-hidden="true">i</span>
-        <div class="tooltip">Tap +1 &middot; right-click -1<br>type a number to set it</div>
-      </div>
-    </div>
+</div>
+<div class="counter" id="counterP2">
+  <div class="counter-label">Survivor 02</div>
+  <div class="counter-value" id="p2Value" role="button" tabindex="0">0</div>
+  <div class="input-row">
+    <input class="counter-input" id="p2Input" type="text" inputmode="numeric" placeholder="Set">
+    <button class="recycle-btn" id="p2Recycle" aria-label="Reset player 2 score">&#9851;</button>
   </div>
+</div>
 
-  <div class="containment">
-    <span class="bracket tl"></span><span class="bracket tr"></span>
-    <span class="bracket bl"></span><span class="bracket br"></span>
-
-    <div class="game-status">
-      <span id="gamePhaseLabel">Phase 1 &middot; Harvest</span>
-      <span class="sep">//</span>
-      <span id="gameTurnLabel">Survivor 01</span>
-    </div>
-
-    <div class="game-hand" id="gameHand"></div>
-
-    <div class="game-banked">Serums secured<strong id="bankedCount">0</strong></div>
-    <div class="game-result" id="gameResult"></div>
+<div class="hud" id="console">
+  <div id="game-status">
+    <span id="gamePhaseLabel">Phase 1 &middot; Harvest</span>
+    <span class="sep">//</span>
+    <span id="gameTurnLabel">Survivor 01</span>
   </div>
-
-  <div class="game-actions">
+  <div id="game-banked">Serums secured<strong id="bankedCount">0</strong><span id="rotPressure"></span></div>
+  <div id="game-result"></div>
+  <div id="actions">
     <button class="action-btn" id="rollHandBtn">Roll</button>
     <button class="action-btn" id="scoreTurnBtn" disabled>Secure &amp; pass</button>
   </div>
@@ -856,14 +425,10 @@
   <div class="modal">
     <div class="modal-header">
       <span>Specimen faces</span>
-      <button class="icon-btn" id="closeCustomize" aria-label="Close">&times;</button>
+      <button class="icon-btn" id="closeCustomize">&times;</button>
     </div>
-    <div class="modal-scroll">
-      <div class="face-grid" id="faceGrid"></div>
-    </div>
-    <div class="modal-actions">
-      <button class="action-btn" id="clearFacesBtn">Reset to icons</button>
-    </div>
+    <div class="modal-scroll"><div class="face-grid" id="faceGrid"></div></div>
+    <div class="modal-actions"><button class="action-btn" id="clearFacesBtn">Reset to icons</button></div>
   </div>
 </div>
 
@@ -871,16 +436,13 @@
   <div class="modal">
     <div class="modal-header">
       <span>Field manual</span>
-      <button class="icon-btn" id="closeRules" aria-label="Close">&times;</button>
+      <button class="icon-btn" id="closeRules">&times;</button>
     </div>
     <div class="modal-scroll rules-content">
-      <p><strong>Objective:</strong> first survivor to secure 10 serums wins. Each turn has two phases.</p>
-
+      <p><strong>Objective:</strong> first survivor to secure 10 serums wins. Each turn has two phases. Drag the view to look around the grove.</p>
       <h3>The dice</h3>
-      <p>Every die shows one of three faces, two of each: a <strong>Botanist</strong> (they can extract serum), a <em>Deathcap</em> (a carnivorous fungus that eats your progress), or a <strong>Serum</strong> vial.</p>
-
+      <p>Each die's six faces mix a <strong>Botanist</strong> (extracts serum), a <em>Deathcap</em> (a carnivorous fungus that eats your progress), and a <strong>Serum</strong> vial &mdash; the mix depends on the version.</p>
       <hr class="rules-divider">
-
       <h3>Phase 1 &mdash; Harvest</h3>
       <p>Roll a hand of 5. After every roll:</p>
       <ul>
@@ -889,305 +451,838 @@
         <li>If the hand ever goes <em>all Deathcaps</em>, the rot takes the field &mdash; Phase 1 ends immediately. Anything already secured carries forward.</li>
         <li>Reroll what's left and repeat until only 1 die remains, then Phase 1 ends.</li>
       </ul>
-
+      <h3>Calling the chopper</h3>
+      <p>After any resolved Harvest roll you may hit <strong>Call chopper</strong> to end Harvest immediately and move to Extraction. But loitering is dangerous: your first <strong>3</strong> Harvest rolls are safe &mdash; every roll beyond that adds <em>+1 phantom deathcap</em> to your Extraction count as the rot overruns the landing zone. Bank greedily or fly out clean; that's the game.</p>
       <h3>Phase 2 &mdash; Extraction</h3>
       <p>Roll a fresh hand of 5, once only:</p>
       <ul>
         <li>Botanists and Serums together make up to <strong>min(Botanists, Serums)</strong> Serums lockable.</li>
-        <li>Total Serum = secured in Phase 1 + lockable from this roll.</li>
+        <li>Total Serum = secured in Phase 1 + lockable from this roll (times the version's banking rate).</li>
         <li><strong>Points this turn = Total Serum &minus; Deathcaps in this roll</strong>. If Deathcaps outnumber your serums, the difference is <em>subtracted from your score</em> &mdash; but your score never drops below zero.</li>
       </ul>
-
       <hr class="rules-divider">
-
       <h3>Console operation</h3>
-      <p>Tap <strong>Roll</strong> to see the dice, then <strong>Resolve</strong> to lock in the outcome &mdash; every roll takes both taps. When Phase 2 resolves, hit <strong>Secure &amp; pass</strong> to add the points to the active survivor and hand the breaker to the other one.</p>
-
+      <p>Tap <strong>Roll</strong> to throw the dice, then <strong>Resolve</strong> to lock in the outcome &mdash; every roll takes both taps. When Phase 2 resolves, hit <strong>Secure &amp; pass</strong> to add the points to the active survivor and hand the breaker to the other one.</p>
       <hr class="rules-divider">
-
       <h3>Versions &mdash; escalating infestation</h3>
-      <p>Cycle with the <strong>V1/V2/V3</strong> button (this restarts the current turn):</p>
       <ul>
-        <li><strong>V1 &mdash; Outbreak:</strong> the classic die, 2 Botanist / 2 Deathcap / 2 Serum. Locks bank 1 serum each. The steady race.</li>
-        <li><strong>V2 &mdash; Overgrowth:</strong> 1 Botanist / 3 Deathcap / 2 Serum, but every locked serum die banks <strong>2</strong>. Bigger jackpots, nastier losses.</li>
-        <li><strong>V3 &mdash; Full Bloom:</strong> 1 Botanist / 4 Deathcap / 1 Serum, and every locked serum die banks <strong>4</strong>. Nearly half your turns will bleed serums &mdash; but a single lucky pairing can win the game outright. Pure chaos.</li>
+        <li><strong>Standard conditions:</strong> 1 Botanist / 3 Deathcap / 2 Serum faces, locks bank <strong>2</strong>. Big jackpots, nasty losses.</li>
+        <li><strong>Pandemic conditions:</strong> 1 Botanist / 4 Deathcap / 1 Serum, locks bank <strong>4</strong>. Pure chaos &mdash; one lucky pairing can win the game outright.</li>
       </ul>
+      <h3>&#9763; Pandemic mode</h3>
+      <p>Every turn after the first has roughly a <strong>2-in-7 chance</strong> the bloom surges: that turn is played under <em>pandemic conditions</em> &mdash; the deadlier die and the 4x banking rate &mdash; announced at the start of the turn, with tremors shaking the grove. It lasts one turn, then conditions settle.</p>
     </div>
+  </div>
+</div>
+
+<div class="overlay" id="winOverlay">
+  <div class="modal" style="align-items:center;">
+    <h2 id="win-title">Antidote secured</h2>
+    <p id="win-sub">Survivor 01 walks out of the grove</p>
+    <div class="modal-actions"><button class="action-btn" id="playAgainBtn">New expedition</button></div>
   </div>
 </div>
 
 <input type="file" id="faceFileInput" accept="image/*" style="position:absolute; left:-9999px; top:-9999px; width:1px; height:1px; opacity:0;">
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 (function(){
-  var gameIcons = {
-    botanist: '<svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="6" y="0" width="4" height="1" fill="#b8e63f"/><rect x="5" y="1" width="6" height="2" fill="#b8e63f"/><rect x="3" y="3" width="10" height="1" fill="#b8e63f"/><rect x="5" y="4" width="6" height="3" fill="#d8d4c3"/><rect x="6" y="5" width="1" height="1" fill="#0a0f08"/><rect x="9" y="5" width="1" height="1" fill="#0a0f08"/><rect x="5" y="7" width="6" height="1" fill="#0a0f08"/><rect x="6" y="8" width="4" height="1" fill="#d8d4c3"/><rect x="4" y="9" width="8" height="1" fill="#7a9c2a"/><rect x="3" y="10" width="10" height="2" fill="#7a9c2a"/><rect x="2" y="10" width="1" height="2" fill="#d8d4c3"/><rect x="13" y="10" width="1" height="2" fill="#d8d4c3"/><rect x="4" y="12" width="8" height="1" fill="#5c7a1c"/><rect x="5" y="13" width="2" height="2" fill="#7a9c2a"/><rect x="9" y="13" width="2" height="2" fill="#7a9c2a"/><rect x="4" y="15" width="3" height="1" fill="#0a0f08"/><rect x="9" y="15" width="3" height="1" fill="#0a0f08"/></svg>',
-    plant: '<svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="6" y="1" width="4" height="1" fill="#e04f56"/><rect x="4" y="2" width="8" height="1" fill="#e04f56"/><rect x="3" y="3" width="10" height="1" fill="#e04f56"/><rect x="2" y="4" width="12" height="2" fill="#e04f56"/><rect x="2" y="6" width="12" height="1" fill="#a3323a"/><rect x="4" y="3" width="2" height="1" fill="#d8d4c3"/><rect x="9" y="2" width="2" height="1" fill="#d8d4c3"/><rect x="11" y="4" width="1" height="1" fill="#d8d4c3"/><rect x="4" y="5" width="1" height="1" fill="#d8d4c3"/><rect x="6" y="7" width="4" height="7" fill="#d8d4c3"/><rect x="5" y="13" width="6" height="1" fill="#d8d4c3"/><rect x="6" y="8" width="1" height="1" fill="#0a0f08"/><rect x="9" y="8" width="1" height="1" fill="#0a0f08"/><rect x="6" y="10" width="4" height="1" fill="#0a0f08"/><rect x="6" y="11" width="1" height="1" fill="#0a0f08"/><rect x="9" y="11" width="1" height="1" fill="#0a0f08"/><rect x="5" y="14" width="6" height="1" fill="#a3323a"/></svg>',
-    serum: '<svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="4" y="0" width="8" height="1" fill="#5fd8c9"/><rect x="5" y="1" width="1" height="12" fill="#2e6e66"/><rect x="10" y="1" width="1" height="12" fill="#2e6e66"/><rect x="6" y="6" width="4" height="7" fill="#5fd8c9"/><rect x="7" y="8" width="1" height="1" fill="#d8d4c3"/><rect x="8" y="10" width="1" height="1" fill="#d8d4c3"/><rect x="6" y="13" width="4" height="1" fill="#2e6e66"/></svg>'
-  };
-  var faceLabels = { botanist: 'Botanist', plant: 'Deathcap', serum: 'Serum' };
-  var faceOrder = ['botanist', 'plant', 'serum'];
-  var faceImages = { botanist: null, plant: null, serum: null };
+  // ============================================================
+  // Renderer / Scene — N64 flavor: flat shading, fog, no shadows
+  // ============================================================
+  var wrap = document.getElementById('canvas-wrap');
+  var scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x14240f, 9, 30);
 
-  function faceHTML(face){
-    if (faceImages[face]) return '<img class="face-img" src="' + faceImages[face] + '" alt="">';
-    return gameIcons[face];
+  var camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.1, 100);
+  var renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setClearColor(0x000000, 0);
+  wrap.appendChild(renderer.domElement);
+  var canvas = renderer.domElement;
+
+  var hemi = new THREE.HemisphereLight(0x9fc06a, 0x1c2612, 0.9);
+  scene.add(hemi);
+  var sun = new THREE.DirectionalLight(0xd8e8a0, 0.85);
+  sun.position.set(8, 12, -6);
+  scene.add(sun);
+  var fill = new THREE.DirectionalLight(0x5fd8c9, 0.18);
+  fill.position.set(-9, 5, 8);
+  scene.add(fill);
+
+  // ---------- blob shadows ----------
+  function makeBlobTexture(){
+    var c = document.createElement('canvas'); c.width=64; c.height=64;
+    var ctx = c.getContext('2d');
+    var g = ctx.createRadialGradient(32,32,0,32,32,32);
+    g.addColorStop(0,'rgba(4,8,4,0.55)');
+    g.addColorStop(1,'rgba(4,8,4,0)');
+    ctx.fillStyle=g; ctx.fillRect(0,0,64,64);
+    return new THREE.CanvasTexture(c);
+  }
+  var blobTex = makeBlobTexture();
+  var blobList = [];
+  function addBlob(x,z,scale){ blobList.push({x:x,z:z,scale:scale}); }
+  function flushBlobs(){
+    if(!blobList.length) return;
+    var dummy = new THREE.Object3D();
+    var geo = new THREE.PlaneGeometry(1,1);
+    var mat = new THREE.MeshBasicMaterial({ map:blobTex, transparent:true, depthWrite:false });
+    var inst = new THREE.InstancedMesh(geo, mat, blobList.length);
+    blobList.forEach(function(b,i){
+      dummy.position.set(b.x, 0.02, b.z);
+      dummy.rotation.set(-Math.PI/2,0,0);
+      dummy.scale.set(b.scale,b.scale,1);
+      dummy.updateMatrix();
+      inst.setMatrixAt(i, dummy.matrix);
+    });
+    inst.instanceMatrix.needsUpdate = true;
+    scene.add(inst);
+    blobList = [];
+  }
+  function buildInstanced(geo, mat, matrices){
+    if(!matrices.length) return null;
+    var inst = new THREE.InstancedMesh(geo, mat, matrices.length);
+    matrices.forEach(function(m,i){ inst.setMatrixAt(i,m); });
+    inst.instanceMatrix.needsUpdate = true;
+    scene.add(inst);
+    return inst;
   }
 
-  /* ---------- Counters ---------- */
+  // ============================================================
+  // Jungle grove environment
+  // ============================================================
+  var PLATFORM_TOP_Y = 0.4;
+  var PLATFORM_R = 2.4;
+  var rand = Math.random;
+
+  function terrainHeight(x,z){
+    var d = Math.sqrt(x*x+z*z);
+    var falloff = Math.min(1, Math.max(0, (d-3.2)/2.8));
+    return (Math.sin(x*0.21)*0.5 + Math.cos(z*0.24)*0.45 + Math.sin((x+z)*0.11)*0.6) * falloff;
+  }
+
+  (function buildGround(){
+    var size=56, segs=40;
+    var geo = new THREE.PlaneGeometry(size,size,segs,segs);
+    var pos = geo.attributes.position;
+    var colors = [];
+    var cLow = new THREE.Color(0x1c2a12);
+    var cMid = new THREE.Color(0x30491c);
+    var cHigh = new THREE.Color(0x4c6b26);
+    var cMud = new THREE.Color(0x3a2f1c);
+    for(var i=0;i<pos.count;i++){
+      var x = pos.getX(i), y = pos.getY(i);
+      var h = terrainHeight(x,-y);
+      pos.setZ(i,h);
+      var t = Math.min(1, Math.max(0,(h+0.4)/1.6));
+      var c = cLow.clone().lerp(cMid, t).lerp(cHigh, t*t*0.6);
+      if(rand()<0.06) c.lerp(cMud, 0.7);
+      colors.push(c.r,c.g,c.b);
+    }
+    geo.setAttribute('color', new THREE.Float32BufferAttribute(colors,3));
+    geo.computeVertexNormals();
+    var mat = new THREE.MeshPhongMaterial({ vertexColors:true, flatShading:true, shininess:0 });
+    var ground = new THREE.Mesh(geo, mat);
+    ground.rotation.x = -Math.PI/2;
+    scene.add(ground);
+  })();
+
+  // ---------- dice dais: a mossy stone slab ----------
+  (function buildDais(){
+    var stone = new THREE.MeshPhongMaterial({ color:0x4a5540, flatShading:true, shininess:0 });
+    var stoneDark = new THREE.MeshPhongMaterial({ color:0x37402f, flatShading:true, shininess:0 });
+    var moss = new THREE.MeshPhongMaterial({ color:0x54702a, flatShading:true, shininess:0 });
+    var dais = new THREE.Mesh(new THREE.CylinderGeometry(PLATFORM_R-0.2, PLATFORM_R, 0.34, 8), stone);
+    dais.position.y = PLATFORM_TOP_Y - 0.17;
+    scene.add(dais);
+    var rim = new THREE.Mesh(new THREE.CylinderGeometry(PLATFORM_R-0.14, PLATFORM_R-0.14, 0.1, 8), stoneDark);
+    rim.position.y = PLATFORM_TOP_Y - 0.36;
+    scene.add(rim);
+    for(var i=0;i<5;i++){
+      var p = new THREE.Mesh(new THREE.CylinderGeometry(0.28+rand()*0.3, 0.34+rand()*0.3, 0.03, 6), moss);
+      var a = rand()*Math.PI*2, r = rand()*(PLATFORM_R-0.8);
+      p.position.set(Math.cos(a)*r, PLATFORM_TOP_Y+0.005, Math.sin(a)*r);
+      p.rotation.y = rand()*Math.PI;
+      scene.add(p);
+    }
+    addBlob(0,0,PLATFORM_R*2.6);
+  })();
+
+  // ---------- carnivorous mushroom field (instanced) ----------
+  var capMat = new THREE.MeshPhongMaterial({ color:0xd94b52, flatShading:true, shininess:0 });
+  var capMatDark = new THREE.MeshPhongMaterial({ color:0xa3323a, flatShading:true, shininess:0 });
+  var stemMat = new THREE.MeshPhongMaterial({ color:0xcfc9b4, flatShading:true, shininess:0 });
+  var capGeo = new THREE.SphereGeometry(1, 7, 4, 0, Math.PI*2, 0, Math.PI/2);
+  var stemGeo = new THREE.CylinderGeometry(0.3, 0.42, 1, 6);
+
+  (function scatterMushrooms(){
+    var dummy = new THREE.Object3D();
+    var capMats=[], capDarkMats=[], stemMats=[];
+    var count = 90;
+    for(var i=0;i<count;i++){
+      var a = rand()*Math.PI*2;
+      var r = 3.4 + rand()*16;
+      var x = Math.cos(a)*r, z = Math.sin(a)*r;
+      var y = terrainHeight(x,z);
+      var s = 0.22 + rand()*0.75;
+      var stemH = s*(1.0+rand()*0.7);
+      dummy.position.set(x, y+stemH/2, z);
+      dummy.rotation.set((rand()-0.5)*0.16, rand()*Math.PI, (rand()-0.5)*0.16);
+      dummy.scale.set(s, stemH, s);
+      dummy.updateMatrix();
+      stemMats.push(dummy.matrix.clone());
+      dummy.position.set(x, y+stemH*0.96, z);
+      dummy.scale.set(s*1.55, s*1.05, s*1.55);
+      dummy.updateMatrix();
+      (rand()<0.7 ? capMats : capDarkMats).push(dummy.matrix.clone());
+      if(s>0.45) addBlob(x,z,s*2.6);
+    }
+    buildInstanced(stemGeo, stemMat, stemMats);
+    buildInstanced(capGeo, capMat, capMats);
+    buildInstanced(capGeo, capMatDark, capDarkMats);
+  })();
+
+  // ---------- hero carnivorous mushrooms: eyes, fangs, breathing maws ----------
+  var heroShrooms = [];
+  function buildHeroMushroom(x, z, scale, faceAngle){
+    var g = new THREE.Group();
+    var y = terrainHeight(x,z);
+    g.position.set(x, y, z);
+    g.rotation.y = faceAngle;
+
+    var stemH = 1.5*scale;
+    var stem = new THREE.Mesh(new THREE.CylinderGeometry(0.42*scale, 0.6*scale, stemH, 7), stemMat);
+    stem.position.y = stemH/2;
+    g.add(stem);
+
+    var cap = new THREE.Mesh(capGeo, capMat);
+    cap.scale.set(1.5*scale, 1.05*scale, 1.5*scale);
+    cap.position.y = stemH*0.97;
+    g.add(cap);
+
+    var spotMat = new THREE.MeshPhongMaterial({ color:0xe8e2cc, flatShading:true, shininess:0 });
+    for(var i=0;i<4;i++){
+      var sp = new THREE.Mesh(new THREE.SphereGeometry(0.14*scale, 5, 4), spotMat);
+      var sa = rand()*Math.PI*2, sr = (0.5+rand()*0.7)*scale;
+      sp.position.set(Math.cos(sa)*sr, stemH*0.97 + (0.55+rand()*0.3)*scale, Math.sin(sa)*sr);
+      g.add(sp);
+    }
+
+    var eyeMat = new THREE.MeshBasicMaterial({ color:0x0a0f08 });
+    var eyeGlow = new THREE.MeshBasicMaterial({ color:0xffd24a });
+    [-1,1].forEach(function(side){
+      var eye = new THREE.Mesh(new THREE.SphereGeometry(0.1*scale, 5, 4), eyeMat);
+      eye.position.set(side*0.2*scale, stemH*0.66, 0.42*scale);
+      g.add(eye);
+      var pupil = new THREE.Mesh(new THREE.SphereGeometry(0.035*scale, 4, 3), eyeGlow);
+      pupil.position.set(side*0.2*scale, stemH*0.66, 0.51*scale);
+      g.add(pupil);
+    });
+
+    var mawMat = new THREE.MeshBasicMaterial({ color:0x140406 });
+    var maw = new THREE.Mesh(new THREE.BoxGeometry(0.56*scale, 0.24*scale, 0.2*scale), mawMat);
+    maw.position.set(0, stemH*0.42, 0.46*scale);
+    g.add(maw);
+    var fangMat = new THREE.MeshPhongMaterial({ color:0xf0ead6, flatShading:true, shininess:0 });
+    [-1,-0.33,0.33,1].forEach(function(fx,i){
+      var fang = new THREE.Mesh(new THREE.ConeGeometry(0.05*scale, 0.14*scale, 4), fangMat);
+      fang.position.set(fx*0.2*scale, stemH*0.42 + (i%2===0? 0.1 : -0.1)*scale*0.9, 0.52*scale);
+      fang.rotation.x = i%2===0 ? Math.PI : 0;
+      g.add(fang);
+    });
+    var mawLight = new THREE.PointLight(0xe04f56, 0.9, 3.2*scale, 2);
+    mawLight.position.set(0, stemH*0.45, 0.6*scale);
+    g.add(mawLight);
+
+    addBlob(x, z, 3.2*scale);
+    scene.add(g);
+    heroShrooms.push({ group:g, cap:cap, maw:maw, light:mawLight, baseY:y, phase:rand()*Math.PI*2, scale:scale, capBaseY:stemH*0.97 });
+    return g;
+  }
+  buildHeroMushroom(-4.6, -2.6, 1.35, Math.atan2(4.6, 2.6));
+  buildHeroMushroom(4.2, -3.4, 1.1, Math.atan2(-4.2, 3.4));
+  buildHeroMushroom(-3.2, 4.4, 0.95, Math.atan2(3.2, -4.4));
+  buildHeroMushroom(5.4, 3.2, 1.6, Math.atan2(-5.4, -3.2));
+
+  // ---------- towering mushroom canopy (instanced ring, replaces trees) ----------
+  (function buildGiantMushrooms(){
+    var giantStemMat = new THREE.MeshPhongMaterial({ color:0xbdb59c, flatShading:true, shininess:0 });
+    var giantCapA = new THREE.MeshPhongMaterial({ color:0xc2434b, flatShading:true, shininess:0 });
+    var giantCapB = new THREE.MeshPhongMaterial({ color:0x8f2c34, flatShading:true, shininess:0 });
+    var giantCapC = new THREE.MeshPhongMaterial({ color:0x6b4a8c, flatShading:true, shininess:0 });
+    var gillMat = new THREE.MeshPhongMaterial({ color:0x7d6f52, flatShading:true, shininess:0 });
+    var giantStemGeo = new THREE.CylinderGeometry(0.22, 0.4, 1.6, 7);
+    var gillGeo = new THREE.CylinderGeometry(0.95, 0.55, 0.22, 8);
+    var dummy = new THREE.Object3D();
+    var stems=[], capsA=[], capsB=[], capsC=[], gills=[];
+    for(var i=0;i<42;i++){
+      var a = rand()*Math.PI*2;
+      var r = 8.5 + rand()*13;
+      var x = Math.cos(a)*r, z = Math.sin(a)*r;
+      var y = terrainHeight(x,z);
+      var s = 0.9 + rand()*1.5;
+      var lean = (rand()-0.5)*0.12;
+      var stemH = 3.4*s;
+      // tall crooked stem
+      dummy.position.set(x, y+stemH/2, z);
+      dummy.rotation.set(lean, rand()*Math.PI, (rand()-0.5)*0.12);
+      dummy.scale.set(s, stemH/1.6, s);
+      dummy.updateMatrix(); stems.push(dummy.matrix.clone());
+      // gill ring under the cap
+      dummy.position.set(x + lean*stemH*0.5, y+stemH*0.94, z);
+      dummy.rotation.set(0, rand()*Math.PI, 0);
+      dummy.scale.set(s*1.15, s, s*1.15);
+      dummy.updateMatrix(); gills.push(dummy.matrix.clone());
+      // broad cap — mostly reds, a few sickly violet ones deeper in
+      dummy.position.set(x + lean*stemH*0.5, y+stemH*0.98, z);
+      dummy.rotation.set((rand()-0.5)*0.1, rand()*Math.PI, (rand()-0.5)*0.1);
+      dummy.scale.set(s*1.9, s*1.15, s*1.9);
+      dummy.updateMatrix();
+      var pick = rand();
+      (pick<0.55 ? capsA : (pick<0.85 ? capsB : capsC)).push(dummy.matrix.clone());
+      if(s>1.4) addBlob(x,z,s*2.4);
+    }
+    buildInstanced(giantStemGeo, giantStemMat, stems);
+    buildInstanced(gillGeo, gillMat, gills);
+    buildInstanced(capGeo, giantCapA, capsA);
+    buildInstanced(capGeo, giantCapB, capsB);
+    buildInstanced(capGeo, giantCapC, capsC);
+  })();
+
+  // ---------- ferns (instanced splayed cones) ----------
+  (function buildFerns(){
+    var fernMat = new THREE.MeshPhongMaterial({ color:0x3f6b24, flatShading:true, shininess:0 });
+    var frond = new THREE.ConeGeometry(0.09, 1.0, 4);
+    var dummy = new THREE.Object3D();
+    var mats=[];
+    for(var i=0;i<70;i++){
+      var a = rand()*Math.PI*2;
+      var r = 3.2 + rand()*13;
+      var x = Math.cos(a)*r, z = Math.sin(a)*r;
+      var y = terrainHeight(x,z);
+      var fronds = 4+Math.floor(rand()*3);
+      for(var f=0;f<fronds;f++){
+        var fa = (f/fronds)*Math.PI*2 + rand()*0.5;
+        var tilt = 0.55 + rand()*0.35;
+        dummy.position.set(x + Math.cos(fa)*0.18, y+0.32, z + Math.sin(fa)*0.18);
+        dummy.rotation.set(Math.cos(fa)*tilt, 0, -Math.sin(fa)*tilt);
+        var s = 0.5+rand()*0.6;
+        dummy.scale.set(s,s,s);
+        dummy.updateMatrix();
+        mats.push(dummy.matrix.clone());
+      }
+    }
+    buildInstanced(frond, fernMat, mats);
+  })();
+
+  flushBlobs();
+
+  // ---------- drifting spores ----------
+  function makeGlowTexture(color){
+    var c = document.createElement('canvas'); c.width=64; c.height=64;
+    var ctx = c.getContext('2d');
+    var g = ctx.createRadialGradient(32,32,2,32,32,30);
+    g.addColorStop(0, color);
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle=g; ctx.fillRect(0,0,64,64);
+    return new THREE.CanvasTexture(c);
+  }
+  var sporeTexG = makeGlowTexture('rgba(184,230,63,0.8)');
+  var sporeTexR = makeGlowTexture('rgba(224,79,86,0.7)');
+  var spores = [];
+  for(var si=0; si<26; si++){
+    var sporeMat = new THREE.SpriteMaterial({ map: si%4===0? sporeTexR : sporeTexG, transparent:true, opacity:0.5, depthWrite:false });
+    var spr = new THREE.Sprite(sporeMat);
+    var sa2 = rand()*Math.PI*2, sr2 = 1+rand()*11;
+    spr.position.set(Math.cos(sa2)*sr2, rand()*3.2, Math.sin(sa2)*sr2);
+    var sc = 0.1+rand()*0.16;
+    spr.scale.set(sc,sc,1);
+    scene.add(spr);
+    spores.push({ sprite:spr, speed:0.16+rand()*0.3, phase:rand()*10, topY:3.4+rand()*1.4 });
+  }
+
+  // ============================================================
+  // Dice — face textures from the 16x16 pixel sprites
+  // ============================================================
+  var SPRITES = {
+    botanist: [[6,0,4,1,'#b8e63f'],[5,1,6,2,'#b8e63f'],[3,3,10,1,'#b8e63f'],[5,4,6,3,'#d8d4c3'],[6,5,1,1,'#0a0f08'],[9,5,1,1,'#0a0f08'],[5,7,6,1,'#0a0f08'],[6,8,4,1,'#d8d4c3'],[4,9,8,1,'#7a9c2a'],[3,10,10,2,'#7a9c2a'],[2,10,1,2,'#d8d4c3'],[13,10,1,2,'#d8d4c3'],[4,12,8,1,'#5c7a1c'],[5,13,2,2,'#7a9c2a'],[9,13,2,2,'#7a9c2a'],[4,15,3,1,'#0a0f08'],[9,15,3,1,'#0a0f08']],
+    plant: [[6,1,4,1,'#e04f56'],[4,2,8,1,'#e04f56'],[3,3,10,1,'#e04f56'],[2,4,12,2,'#e04f56'],[2,6,12,1,'#a3323a'],[4,3,2,1,'#d8d4c3'],[9,2,2,1,'#d8d4c3'],[11,4,1,1,'#d8d4c3'],[4,5,1,1,'#d8d4c3'],[6,7,4,7,'#d8d4c3'],[5,13,6,1,'#d8d4c3'],[6,8,1,1,'#0a0f08'],[9,8,1,1,'#0a0f08'],[6,10,4,1,'#0a0f08'],[6,11,1,1,'#0a0f08'],[9,11,1,1,'#0a0f08'],[5,14,6,1,'#a3323a']],
+    serum: [[4,0,8,1,'#5fd8c9'],[5,1,1,12,'#2e6e66'],[10,1,1,12,'#2e6e66'],[6,6,4,7,'#5fd8c9'],[7,8,1,1,'#d8d4c3'],[8,10,1,1,'#d8d4c3'],[6,13,4,1,'#2e6e66']]
+  };
+  var faceImages = { botanist:null, plant:null, serum:null };
+  var faceLabels = { botanist:'Botanist', plant:'Deathcap', serum:'Serum' };
+  var faceOrder = ['botanist','plant','serum'];
+
+  function drawFaceCanvas(type, size){
+    var c = document.createElement('canvas'); c.width=size; c.height=size;
+    var ctx = c.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+    ctx.fillStyle = '#131b0e';
+    ctx.fillRect(0,0,size,size);
+    var b = Math.round(size*0.05);
+    ctx.fillStyle = '#45573a';
+    ctx.fillRect(0,0,size,b); ctx.fillRect(0,size-b,size,b);
+    ctx.fillRect(0,0,b,size); ctx.fillRect(size-b,0,b,size);
+    ctx.strokeStyle = '#7a9c2a';
+    ctx.lineWidth = Math.max(1, size*0.012);
+    ctx.strokeRect(b*1.7, b*1.7, size-b*3.4, size-b*3.4);
+    if(faceImages[type]){
+      var img = faceImages[type];
+      var inner = size - b*4;
+      var ar = img.width/img.height;
+      var dw = inner, dh = inner;
+      if(ar>1) dw = inner*ar; else dh = inner/ar;
+      ctx.save();
+      ctx.beginPath(); ctx.rect(b*2, b*2, inner, inner); ctx.clip();
+      ctx.imageSmoothingEnabled = true;
+      ctx.drawImage(img, b*2 + (inner-dw)/2, b*2 + (inner-dh)/2, dw, dh);
+      ctx.restore();
+    } else {
+      var px = Math.floor((size - b*4) / 16);
+      var ox = Math.round((size - px*16)/2), oy = ox;
+      SPRITES[type].forEach(function(r){
+        ctx.fillStyle = r[4];
+        ctx.fillRect(ox + r[0]*px, oy + r[1]*px, r[2]*px, r[3]*px);
+      });
+    }
+    return c;
+  }
+  function makeFaceMaterial(type){
+    var tex = new THREE.CanvasTexture(drawFaceCanvas(type, 128));
+    tex.magFilter = THREE.NearestFilter;
+    tex.minFilter = THREE.LinearMipmapLinearFilter;
+    tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    return new THREE.MeshPhongMaterial({ map:tex, flatShading:true, shininess:0 });
+  }
+  var faceMaterialCache = {};
+  function rebuildFaceMaterials(){
+    faceOrder.forEach(function(t){
+      if(faceMaterialCache[t]){
+        faceMaterialCache[t].map.dispose();
+        faceMaterialCache[t].dispose();
+      }
+      faceMaterialCache[t] = makeFaceMaterial(t);
+    });
+  }
+  rebuildFaceMaterials();
+
+  var MODES = {
+    1: { faces:['botanist','botanist','plant','plant','serum','serum'], bankMult:1 },
+    2: { faces:['botanist','plant','plant','plant','serum','serum'], bankMult:2 },
+    3: { faces:['botanist','plant','plant','plant','plant','serum'], bankMult:4 }
+  };
+  var baseMode = 2;
+  var gameMode = 2;
+  var pandemicTurn = false;
+  var firstTurnOfGame = true;
+  function modeMaterials(){
+    return MODES[gameMode].faces.map(function(t){ return faceMaterialCache[t]; });
+  }
+
+  var FACE_NORMALS = [
+    new THREE.Vector3(1,0,0), new THREE.Vector3(-1,0,0),
+    new THREE.Vector3(0,1,0), new THREE.Vector3(0,-1,0),
+    new THREE.Vector3(0,0,1), new THREE.Vector3(0,0,-1)
+  ];
+
+  var dieSize = 0.6;
+  var dieGeo = new THREE.BoxGeometry(dieSize, dieSize, dieSize);
+  var groundYDie = PLATFORM_TOP_Y + dieSize/2;
+  var restPositions = [];
+  for(var ri=0; ri<5; ri++){
+    var ra = (-0.5 + ri*0.25) * Math.PI;
+    restPositions.push(new THREE.Vector3(Math.sin(ra)*1.35, groundYDie, Math.cos(ra)*0.9 - 0.25));
+  }
+
+  var dicePool = [];
+  for(var di=0; di<5; di++){
+    var mesh = new THREE.Mesh(dieGeo, modeMaterials());
+    mesh.position.copy(restPositions[di]);
+    mesh.rotation.set(rand()*Math.PI, rand()*Math.PI, rand()*Math.PI);
+    scene.add(mesh);
+    dicePool.push({
+      mesh: mesh,
+      active:false, settled:true, hidden:false,
+      startTime:0, duration:1500,
+      startPos:new THREE.Vector3(), targetPos:restPositions[di].clone(),
+      spinAxis:new THREE.Vector3(1,0,0), spinSpeed:0,
+      targetQuat:new THREE.Quaternion()
+    });
+  }
+  function refreshDiceMaterials(){
+    var mats = modeMaterials();
+    dicePool.forEach(function(d){ d.mesh.material = mats; });
+  }
+
+  // baseline light levels, dimmed during extraction for drama
+  var baseHemiI = hemi.intensity, baseSunI = sun.intensity, baseFillI = fill.intensity;
+  var baseFogColor = scene.fog.color.clone();
+  var darkFogColor = new THREE.Color(0x080f06);
+  var darkAmount = 0;
+
+  var extractionLight = new THREE.PointLight(0x5fd8c9, 0, 7, 2);
+  extractionLight.position.set(0, 2.6, 0);
+  scene.add(extractionLight);
+
+  // ---------- extraction rope ladders (rescue chopper somewhere in the fog) ----------
+  var ropeLadders = [];
+  var rescueLight, rescueTarget, groundSpots;
+  (function buildRopeLadders(){
+    var ropeMat = new THREE.MeshPhongMaterial({ color:0x111111, flatShading:true, shininess:0 });
+    var rungMat = new THREE.MeshPhongMaterial({ color:0x1a1a1a, flatShading:true, shininess:0 });
+    var configs = [
+      { angle: 0.5,  rate: 4.6 },
+      { angle: 2.1,  rate: 3.6 },
+      { angle: 3.7,  rate: 5.2 },
+      { angle: 5.3,  rate: 4.1 }
+    ];
+    configs.forEach(function(cfg){
+      var g = new THREE.Group();
+      var x = Math.cos(cfg.angle)*2.05, z = Math.sin(cfg.angle)*2.05;
+      g.position.set(x, 10, z);
+      g.rotation.y = -cfg.angle + Math.PI/2;
+
+      // two long rails rising into the fog
+      [-0.22, 0.22].forEach(function(rx){
+        var rail = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 12, 4), ropeMat);
+        rail.position.set(rx, 6, 0);
+        g.add(rail);
+      });
+      // rungs up the lower stretch
+      for(var ry=0.25; ry<7.5; ry+=0.4){
+        var rung = new THREE.Mesh(new THREE.CylinderGeometry(0.024, 0.024, 0.5, 4), rungMat);
+        rung.rotation.z = Math.PI/2;
+        rung.position.set(0, ry, 0);
+        g.add(rung);
+      }
+
+      g.visible = false;
+      scene.add(g);
+      ropeLadders.push({ group:g, dropY:0.55, retractY:10, rate:cfg.rate, sway:rand()*Math.PI*2 });
+    });
+
+    // rescue searchlight sweeping down from the unseen chopper
+    // roaming searchlight pools on the ground
+    groundSpots = [];
+    var poolTex = makeGlowTexture('rgba(255,242,208,0.65)');
+    for(var gi=0; gi<3; gi++){
+      var spot = new THREE.SpotLight(0xfff2d0, 0, 26, 0.13, 0.35, 1.6);
+      spot.position.set(0, 11, 0);
+      var tgt = new THREE.Object3D();
+      scene.add(tgt);
+      spot.target = tgt;
+      scene.add(spot);
+      var pool = new THREE.Mesh(
+        new THREE.CircleGeometry(0.72, 20),
+        new THREE.MeshBasicMaterial({ map:poolTex, transparent:true, opacity:0, depthWrite:false, blending:THREE.AdditiveBlending })
+      );
+      pool.rotation.x = -Math.PI/2;
+      scene.add(pool);
+      groundSpots.push({
+        spot:spot, tgt:tgt, pool:pool,
+        phase: gi*2.1 + Math.random(),
+        speedA: 0.00035 + Math.random()*0.0002,
+        speedB: 0.00028 + Math.random()*0.0002,
+        rangeA: 2.6 + gi*1.4,
+        rangeB: 2.2 + gi*1.1
+      });
+    }
+
+    rescueLight = new THREE.SpotLight(0xfff2d0, 0, 24, 0.3, 0.4, 1.4);
+    rescueLight.position.set(0, 10, 0);
+    rescueTarget = new THREE.Object3D();
+    rescueTarget.position.set(0, PLATFORM_TOP_Y, 0);
+    scene.add(rescueTarget);
+    rescueLight.target = rescueTarget;
+    scene.add(rescueLight);
+  })();
+
+    var removalAnims = [];
+
+  // ============================================================
+  // Audio — synthesized retro blips
+  // ============================================================
+  var AC;
+  function getAC(){ if(!AC) AC = new (window.AudioContext||window.webkitAudioContext)(); return AC; }
+  function beep(f,d,v,type){
+    try{
+      var ac=getAC(), o=ac.createOscillator(), g=ac.createGain();
+      o.connect(g); g.connect(ac.destination);
+      o.type = type||'triangle'; o.frequency.value = f;
+      g.gain.setValueAtTime(v||0.07, ac.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime+d);
+      o.start(); o.stop(ac.currentTime+d);
+    }catch(e){}
+  }
+  function sfxThud(){ beep(85+Math.random()*30, 0.09, 0.13, 'sine'); }
+  function sfxLock(i){ setTimeout(function(){ beep(620+i*160, 0.2, 0.07, 'triangle'); }, i*80); }
+  function sfxEat(){ beep(130, 0.28, 0.1, 'sawtooth'); }
+
+  // ============================================================
+  // HUD wiring: counters, breaker, chips, modals
+  // ============================================================
   function setupCounter(valueEl, inputEl, recycleBtn){
     var count = 0;
     function render(){ valueEl.textContent = count; }
-    function bump(delta){ count += delta; render(); }
-    function setTo(n){ if (!isNaN(n)) { count = Math.trunc(n); render(); } }
-
+    function bump(d){ count += d; render(); }
+    function setTo(n){ if(!isNaN(n)){ count = Math.trunc(n); render(); } }
     valueEl.addEventListener('click', function(){ bump(1); });
     valueEl.addEventListener('contextmenu', function(e){ e.preventDefault(); bump(-1); });
     valueEl.addEventListener('keydown', function(e){
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); bump(1); }
+      if(e.key==='Enter'||e.key===' '){ e.preventDefault(); bump(1); }
     });
     recycleBtn.addEventListener('click', function(){ setTo(0); });
-
-    function commitInput(){
-      var n = parseInt(inputEl.value, 10);
-      if (!isNaN(n)) setTo(n);
-      inputEl.value = '';
+    function commit(){
+      var n = parseInt(inputEl.value,10);
+      if(!isNaN(n)) setTo(n);
+      inputEl.value='';
     }
     inputEl.addEventListener('keydown', function(e){
-      if (e.key === 'Enter') { e.preventDefault(); commitInput(); inputEl.blur(); }
+      if(e.key==='Enter'){ e.preventDefault(); commit(); inputEl.blur(); }
     });
-    inputEl.addEventListener('blur', function(){ if (inputEl.value !== '') commitInput(); });
-
+    inputEl.addEventListener('blur', function(){ if(inputEl.value!=='') commit(); });
     render();
     return {
-      addPoints: function(n){ bump(n); },
-      applyScore: function(n){ setTo(Math.max(0, count + n)); },
-      getCount: function(){ return count; }
+      applyScore: function(n){ setTo(Math.max(0, count+n)); },
+      getCount: function(){ return count; },
+      reset: function(){ setTo(0); }
     };
   }
-
   var counters = {
     p1: setupCounter(document.getElementById('p1Value'), document.getElementById('p1Input'), document.getElementById('p1Recycle')),
     p2: setupCounter(document.getElementById('p2Value'), document.getElementById('p2Input'), document.getElementById('p2Recycle'))
   };
 
-  /* ---------- Turn breaker ---------- */
   var turnSwitch = document.getElementById('turnSwitch');
-  var ledP1 = document.getElementById('ledP1');
-  var ledP2 = document.getElementById('ledP2');
-  var sideP1 = document.getElementById('sideP1');
-  var sideP2 = document.getElementById('sideP2');
-  var counterBoxP1 = document.getElementById('counterBoxP1');
-  var counterBoxP2 = document.getElementById('counterBoxP2');
+  var brkP1 = document.getElementById('brkP1');
+  var brkP2 = document.getElementById('brkP2');
+  var counterBoxP1 = document.getElementById('counterP1');
+  var counterBoxP2 = document.getElementById('counterP2');
   var currentTurn = 'p1';
-
   function renderTurn(){
-    var isP2 = currentTurn === 'p2';
+    var isP2 = currentTurn==='p2';
     turnSwitch.classList.toggle('right', isP2);
-    ledP1.classList.toggle('lit', !isP2);
-    ledP2.classList.toggle('lit', isP2);
-    sideP1.classList.toggle('live', !isP2);
-    sideP2.classList.toggle('live', isP2);
+    brkP1.classList.toggle('live', !isP2);
+    brkP2.classList.toggle('live', isP2);
     counterBoxP1.classList.toggle('live', !isP2);
     counterBoxP2.classList.toggle('live', isP2);
-    sideP1.querySelector('.breaker-tag').textContent = isP2 ? 'Standing by' : 'Active operator';
-    sideP2.querySelector('.breaker-tag').textContent = isP2 ? 'Active operator' : 'Standing by';
-    turnSwitch.setAttribute('aria-checked', isP2 ? 'true' : 'false');
+    turnSwitch.setAttribute('aria-checked', isP2?'true':'false');
     renderGameStatus();
   }
-  function toggleTurn(){
-    currentTurn = (currentTurn === 'p1') ? 'p2' : 'p1';
-    renderTurn();
-  }
+  function toggleTurn(){ currentTurn = currentTurn==='p1' ? 'p2' : 'p1'; renderTurn(); }
   turnSwitch.addEventListener('click', toggleTurn);
   turnSwitch.addEventListener('keydown', function(e){
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleTurn(); }
+    if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleTurn(); }
   });
 
-  /* ---------- Customize faces ---------- */
-  var customizeBtn = document.getElementById('customizeBtn');
+  // modals
   var customizeOverlay = document.getElementById('customizeOverlay');
-  var closeCustomize = document.getElementById('closeCustomize');
-  var clearFacesBtn = document.getElementById('clearFacesBtn');
+  var rulesOverlay = document.getElementById('rulesOverlay');
+  var winOverlay = document.getElementById('winOverlay');
   var faceGrid = document.getElementById('faceGrid');
   var faceFileInput = document.getElementById('faceFileInput');
   var pendingUpload = null;
 
   function buildFaceGrid(){
     faceGrid.innerHTML = '';
-    faceOrder.forEach(function(face){
-      var slot = document.createElement('div');
-      slot.className = 'face-slot';
-
-      var preview = document.createElement('div');
-      preview.className = 'face-preview';
-      preview.innerHTML = faceHTML(face);
-
-      var label = document.createElement('span');
-      label.className = 'face-name';
-      label.textContent = faceLabels[face];
-
-      preview.addEventListener('click', function(){
-        pendingUpload = { face: face, previewEl: preview };
+    faceOrder.forEach(function(type){
+      var slot = document.createElement('div'); slot.className='face-slot';
+      var prev = document.createElement('div'); prev.className='face-preview';
+      prev.appendChild(drawFaceCanvas(type, 128));
+      var label = document.createElement('span'); label.className='face-name';
+      label.textContent = faceLabels[type];
+      prev.addEventListener('click', function(){
+        pendingUpload = { type:type };
         faceFileInput.value = '';
         faceFileInput.click();
       });
-
-      slot.appendChild(preview);
-      slot.appendChild(label);
+      slot.appendChild(prev); slot.appendChild(label);
       faceGrid.appendChild(slot);
     });
   }
   buildFaceGrid();
 
   faceFileInput.addEventListener('change', function(){
-    if (!pendingUpload) return;
+    if(!pendingUpload) return;
     var file = faceFileInput.files && faceFileInput.files[0];
-    if (!file) { pendingUpload = null; return; }
-    var target = pendingUpload;
+    if(!file){ pendingUpload=null; return; }
+    var type = pendingUpload.type;
     var reader = new FileReader();
     reader.onload = function(){
-      faceImages[target.face] = reader.result;
-      target.previewEl.innerHTML = '<img class="face-img" src="' + reader.result + '" alt="">';
-      renderGameHand();
-      pendingUpload = null;
+      var img = new Image();
+      img.onload = function(){
+        faceImages[type] = img;
+        rebuildFaceMaterials();
+        refreshDiceMaterials();
+        buildFaceGrid();
+        pendingUpload = null;
+      };
+      img.src = reader.result;
     };
     reader.readAsDataURL(file);
   });
 
-  customizeBtn.addEventListener('click', function(){ customizeOverlay.classList.add('open'); });
-  closeCustomize.addEventListener('click', function(){ customizeOverlay.classList.remove('open'); });
-  customizeOverlay.addEventListener('click', function(e){
-    if (e.target === customizeOverlay) customizeOverlay.classList.remove('open');
+  document.getElementById('customizeBtn').addEventListener('click', function(){ customizeOverlay.classList.add('open'); });
+  document.getElementById('closeCustomize').addEventListener('click', function(){ customizeOverlay.classList.remove('open'); });
+  customizeOverlay.addEventListener('click', function(e){ if(e.target===customizeOverlay) customizeOverlay.classList.remove('open'); });
+  document.getElementById('clearFacesBtn').addEventListener('click', function(){
+    faceOrder.forEach(function(t){ faceImages[t]=null; });
+    rebuildFaceMaterials(); refreshDiceMaterials(); buildFaceGrid();
   });
-  clearFacesBtn.addEventListener('click', function(){
-    faceOrder.forEach(function(face){ faceImages[face] = null; });
-    buildFaceGrid();
-    renderGameHand();
-  });
-
-  /* ---------- Rules ---------- */
-  var rulesBtn = document.getElementById('rulesBtn');
-  var rulesOverlay = document.getElementById('rulesOverlay');
-  var closeRules = document.getElementById('closeRules');
-  rulesBtn.addEventListener('click', function(){ rulesOverlay.classList.add('open'); });
-  closeRules.addEventListener('click', function(){ rulesOverlay.classList.remove('open'); });
-  rulesOverlay.addEventListener('click', function(e){
-    if (e.target === rulesOverlay) rulesOverlay.classList.remove('open');
-  });
-
+  document.getElementById('rulesBtn').addEventListener('click', function(){ rulesOverlay.classList.add('open'); });
+  document.getElementById('closeRules').addEventListener('click', function(){ rulesOverlay.classList.remove('open'); });
+  rulesOverlay.addEventListener('click', function(e){ if(e.target===rulesOverlay) rulesOverlay.classList.remove('open'); });
   document.addEventListener('keydown', function(e){
-    if (e.key === 'Escape') {
-      customizeOverlay.classList.remove('open');
-      rulesOverlay.classList.remove('open');
-    }
+    if(e.key==='Escape'){ customizeOverlay.classList.remove('open'); rulesOverlay.classList.remove('open'); }
   });
 
-  /* ---------- Game logic ---------- */
+  // ============================================================
+  // Game logic — ported intact from the 2D console
+  // ============================================================
   var gamePhaseLabel = document.getElementById('gamePhaseLabel');
   var gameTurnLabel = document.getElementById('gameTurnLabel');
-  var gameHandEl = document.getElementById('gameHand');
   var bankedCountEl = document.getElementById('bankedCount');
-  var gameResultEl = document.getElementById('gameResult');
+  var gameResultEl = document.getElementById('game-result');
   var rollHandBtn = document.getElementById('rollHandBtn');
   var scoreTurnBtn = document.getElementById('scoreTurnBtn');
 
-  var phaseNames = { 1: 'Phase 1 \u00b7 Harvest', 2: 'Phase 2 \u00b7 Extraction' };
-
-  var MODES = {
-    1: { faces: ['botanist','botanist','plant','plant','serum','serum'], bankMult: 1 },
-    2: { faces: ['botanist','plant','plant','plant','serum','serum'], bankMult: 2 },
-    3: { faces: ['botanist','plant','plant','plant','plant','serum'], bankMult: 4 }
-  };
-  var gameMode = 1;
-
+  var phaseNames = { 1:'Phase 1 \u00b7 Harvest', 2:'Phase 2 \u00b7 Extraction' };
   var gamePhase = 1;
   var gameHandArr = [];
   var bankedSerum = 0;
   var pendingPoints = 0;
   var phase2Rolled = false;
   var awaitingResolve = false;
+  var isAnimating = false;
+  var harvestRolls = 0;
+  var rotPenalty = 0;
+  var SAFE_ROLLS = 3;
 
-  function randomFace(){
-    var faces = MODES[gameMode].faces;
-    return faces[Math.floor(Math.random() * 6)];
-  }
-  function makeHand(n, rolled){
+  function randomResult(){ return Math.floor(Math.random()*6); }
+  function faceOf(item){ return MODES[gameMode].faces[item.resultIndex]; }
+  function makeHand(){
     var arr = [];
-    for (var i = 0; i < n; i++) arr.push({ face: rolled ? randomFace() : null });
+    for(var i=0;i<5;i++) arr.push({ resultIndex:null, meshIndex:i });
     return arr;
   }
-  function countFace(arr, face){
-    return arr.filter(function(d){ return d.face === face; }).length;
+  function countFace(arr, f){
+    return arr.filter(function(d){ return d.resultIndex!==null && faceOf(d)===f; }).length;
   }
-  function removeFaces(arr, face, n){
-    var removed = 0;
-    for (var i = arr.length - 1; i >= 0 && removed < n; i--) {
-      if (arr[i].face === face) { arr.splice(i, 1); removed++; }
+  function itemsOfLastN(face, n){
+    var out = [];
+    for(var i=gameHandArr.length-1; i>=0 && out.length<n; i--){
+      if(faceOf(gameHandArr[i])===face) out.push(gameHandArr[i]);
     }
-    return removed;
+    return out;
+  }
+  function removeItems(items){
+    items.forEach(function(it){
+      var idx = gameHandArr.indexOf(it);
+      if(idx>-1) gameHandArr.splice(idx,1);
+    });
   }
 
   function renderGameStatus(){
+    document.getElementById('game-status').classList.toggle('extraction', gamePhase===2);
+    gameResultEl.classList.toggle('extraction', gamePhase===2 && !pandemicTurn);
     gamePhaseLabel.textContent = phaseNames[gamePhase];
-    gameTurnLabel.textContent = currentTurn === 'p1' ? 'Survivor 01' : 'Survivor 02';
+    var rotEl = document.getElementById('rotPressure');
+    var pen = (gamePhase===1) ? Math.max(0, harvestRolls - SAFE_ROLLS) : rotPenalty;
+    if(pen > 0){
+      rotEl.textContent = '\u2620 rot +' + pen;
+    } else if(gamePhase===1 && harvestRolls === SAFE_ROLLS){
+      rotEl.textContent = 'LZ closing';
+    } else {
+      rotEl.textContent = '';
+    }
+    gameTurnLabel.textContent = currentTurn==='p1' ? 'Survivor 01' : 'Survivor 02';
     bankedCountEl.textContent = bankedSerum;
   }
 
-  var CUBE_FACES = ['f-front','f-back','f-right','f-left','f-top','f-bottom'];
-
-  function dieCubeHTML(faceHtml){
-    var inner = '';
-    for (var i = 0; i < CUBE_FACES.length; i++) {
-      inner += '<div class="cube-face ' + CUBE_FACES[i] + '">' + faceHtml + '</div>';
-    }
-    return '<div class="die-cube">' + inner + '</div>';
-  }
-
-  function setCubeFaces(scene, faceHtml){
-    var faces = scene.querySelectorAll('.cube-face');
-    for (var i = 0; i < faces.length; i++) faces[i].innerHTML = faceHtml;
-  }
-
-  function renderGameHand(){
-    gameHandEl.innerHTML = '';
-    gameHandArr.forEach(function(d){
-      var scene = document.createElement('div');
-      if (d.face) {
-        scene.className = 'die-scene';
-        scene.innerHTML = dieCubeHTML(faceHTML(d.face));
-      } else {
-        scene.className = 'die-scene empty';
+  function layoutHand(){
+    dicePool.forEach(function(d,i){
+      var inHand = gameHandArr.some(function(it){ return it.meshIndex===i; });
+      d.mesh.visible = inHand;
+      d.hidden = !inHand;
+      if(inHand && d.settled){
+        d.mesh.scale.set(1,1,1);
       }
-      gameHandEl.appendChild(scene);
     });
   }
 
   function startTurn(){
+    if(gamePhase === 2) exitExtractionCam();
+    // 1-in-5 turns, the bloom surges: V2 turns play as V3 "pandemic mode"
+    pandemicTurn = (!firstTurnOfGame && baseMode === 2 && Math.random() < 0.28);
+    firstTurnOfGame = false;
+    gameMode = pandemicTurn ? 3 : baseMode;
+    refreshDiceMaterials();
+    gameResultEl.classList.toggle('pandemic', pandemicTurn);
+    document.body.classList.toggle('pandemic', pandemicTurn);
     gamePhase = 1;
     bankedSerum = 0;
     pendingPoints = 0;
     phase2Rolled = false;
     awaitingResolve = false;
-    gameHandArr = makeHand(5, false);
+    gameHandArr = makeHand();
     gameResultEl.textContent = '';
     rollHandBtn.disabled = false;
     rollHandBtn.textContent = 'Roll';
     rollHandBtn.classList.remove('pulse');
-    scoreTurnBtn.disabled = true;
+    harvestRolls = 0;
+    rotPenalty = 0;
+    updateChopperBtn();
+    if(pandemicTurn){
+      gameResultEl.textContent = '\u2623 PANDEMIC MODE \u2014 the bloom surges (V3 this turn)';
+      beep(180, 0.35, 0.09, 'sawtooth');
+      setTimeout(function(){ beep(140, 0.4, 0.09, 'sawtooth'); }, 180);
+    }
+    dicePool.forEach(function(d,i){
+      d.active=false; d.settled=true; d.hidden=false;
+      d.mesh.visible = true;
+      d.mesh.scale.set(1,1,1);
+      d.mesh.position.copy(restPositions[i]);
+      d.mesh.rotation.set(rand()*Math.PI, rand()*Math.PI, rand()*Math.PI);
+    });
     renderGameStatus();
-    renderGameHand();
   }
 
   function advanceToPhase2(){
     gamePhase = 2;
-    gameHandArr = makeHand(5, false);
+    rotPenalty = Math.max(0, harvestRolls - SAFE_ROLLS);
+    gameHandArr = makeHand();
+    gameResultEl.textContent = rotPenalty > 0
+      ? 'Extraction \u2014 the rot overran the LZ (+' + rotPenalty + ' deathcap' + (rotPenalty===1?'':'s') + ')'
+      : 'Extraction \u2014 one roll, all or nothing';
+    updateChopperBtn();
+    enterExtractionCam();
+    rollHandBtn.textContent = 'Extract';
+    beep(520, 0.18, 0.07, 'triangle');
+    setTimeout(function(){ beep(690, 0.22, 0.07, 'triangle'); }, 140);
+    dicePool.forEach(function(d,i){
+      d.mesh.visible = false; d.hidden=false; d.settled=true; d.active=false;
+      d.mesh.scale.set(1,1,1);
+      d.mesh.position.copy(restPositions[i]);
+      d.mesh.rotation.set(rand()*Math.PI, rand()*Math.PI, rand()*Math.PI);
+    });
     renderGameStatus();
-    renderGameHand();
+    // the extraction roll happens on its own: dice plummet from above
+    setTimeout(function(){
+      dicePool.forEach(function(d){ d.mesh.visible = true; });
+      rollHand(function(){
+        awaitingResolve = true;
+        rollHandBtn.textContent = 'Resolve';
+        rollHandBtn.classList.add('pulse');
+        gameResultEl.textContent = 'Tap Resolve to lock in the extraction';
+      }, true);
+    }, 380);
   }
 
   function endPhase1Hand(){
-    if (gameHandArr.length <= 1) {
+    if(gameHandArr.length <= 1){
       gameHandArr = [];
       advanceToPhase2();
       return true;
@@ -1195,148 +1290,162 @@
     return false;
   }
 
-  var isAnimating = false;
-
-  function tileAt(i){ return gameHandEl.children[i]; }
-
-  function indexesOfLastN(face, n){
-    var idxs = [];
-    for (var i = gameHandArr.length - 1; i >= 0 && idxs.length < n; i--) {
-      if (gameHandArr[i].face === face) idxs.push(i);
-    }
-    return idxs;
-  }
-
-  function animateRoll(done){
+  // ---------- 3D roll & removal ----------
+  function rollHand(done, fromAbove){
     isAnimating = true;
     rollHandBtn.disabled = true;
-    var scenes = [].slice.call(gameHandEl.children);
-    scenes.forEach(function(s){
-      var cube = s.querySelector('.die-cube');
-      if (cube) { cube.classList.remove('settling'); cube.classList.add('tumbling'); }
-    });
+    try{ getAC().resume(); }catch(e){}
+    beep(660,0.06,0.05,'square');
+    var now = performance.now();
+    gameHandArr.forEach(function(item, i){
+      var d = dicePool[item.meshIndex];
+      if(fromAbove){
+        // plummet from above the camera, scattered over the dais
+        var rp = restPositions[item.meshIndex];
+        d.startPos.set(rp.x + (rand()-0.5)*0.9, 8.5 + rand()*2.2, rp.z + (rand()-0.5)*0.9);
+      } else {
+        var ang = rand()*Math.PI*2;
+        var dist = 2.2 + rand()*0.9;
+        d.startPos.set(Math.cos(ang)*dist, 2.8+rand()*0.8, Math.sin(ang)*dist);
+      }
+      d.mesh.position.copy(d.startPos);
+      d.targetPos.copy(restPositions[item.meshIndex]);
 
-    var flicker = setInterval(function(){
-      scenes.forEach(function(s){
-        var cube = s.querySelector('.die-cube');
-        if (cube && cube.classList.contains('tumbling')) setCubeFaces(s, faceHTML(randomFace()));
+      item.resultIndex = randomResult();
+      var align = new THREE.Quaternion().setFromUnitVectors(FACE_NORMALS[item.resultIndex].clone().normalize(), new THREE.Vector3(0,1,0));
+      var spin = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0), rand()*Math.PI*2);
+      d.targetQuat.copy(spin).multiply(align);
+
+      d.spinAxis.set(rand()-0.5, rand()-0.5, rand()-0.5).normalize();
+      d.spinSpeed = 15 + rand()*8;
+      d.startTime = now + i*90;
+      d.duration = 1350 + i*150;
+      d.active = true;
+      d.settled = false;
+    });
+    var poll = setInterval(function(){
+      var allSet = gameHandArr.every(function(it){ return dicePool[it.meshIndex].settled; });
+      if(allSet){
+        clearInterval(poll);
+        isAnimating = false;
+        rollHandBtn.disabled = false;
+        done();
+      }
+    }, 100);
+  }
+
+  function animateRemoval(items, kind, done){
+    if(!items.length){ done(); return; }
+    isAnimating = true;
+    rollHandBtn.disabled = true;
+    var now = performance.now();
+    items.forEach(function(it, i){
+      removalAnims.push({
+        die: dicePool[it.meshIndex],
+        start: now + i*70,
+        dur: 620,
+        kind: kind
       });
-    }, 85);
-
-    scenes.forEach(function(s, i){
-      setTimeout(function(){
-        var cube = s.querySelector('.die-cube');
-        if (!cube) return;
-        cube.classList.remove('tumbling');
-        setCubeFaces(s, faceHTML(gameHandArr[i].face));
-        cube.classList.add('settling');
-      }, 460 + i * 140);
-    });
-
-    setTimeout(function(){
-      clearInterval(flicker);
-      isAnimating = false;
-      rollHandBtn.disabled = false;
-      done();
-    }, 460 + scenes.length * 140 + 200);
-  }
-
-  function animateRemoval(idxs, cls, done){
-    if (!idxs.length) { done(); return; }
-    isAnimating = true;
-    rollHandBtn.disabled = true;
-    idxs.forEach(function(i){
-      var t = tileAt(i);
-      if (t) t.classList.add(cls);
+      if(kind==='locking') sfxLock(i); else sfxEat();
     });
     setTimeout(function(){
       isAnimating = false;
       rollHandBtn.disabled = false;
       done();
-    }, 580);
+    }, 620 + items.length*70 + 80);
   }
 
+  // ---------- Phase resolution (identical math to the 2D console) ----------
   function processPhase1Roll(){
-    var B = countFace(gameHandArr, 'botanist');
-    var S = countFace(gameHandArr, 'serum');
-    var P = countFace(gameHandArr, 'plant');
+    var B = countFace(gameHandArr,'botanist');
+    var S = countFace(gameHandArr,'serum');
+    var P = countFace(gameHandArr,'plant');
 
-    if (B >= 1 && S >= 1) {
-      var lockCount = Math.min(B, S);
-      var lockIdxs = indexesOfLastN('serum', lockCount);
+    if(B>=1 && S>=1){
+      var lockCount = Math.min(B,S);
+      var lockItems = itemsOfLastN('serum', lockCount);
       var secured = lockCount * MODES[gameMode].bankMult;
-      gameResultEl.textContent = secured + (secured === 1 ? ' serum secured' : ' serums secured');
-      animateRemoval(lockIdxs, 'locking', function(){
-        removeFaces(gameHandArr, 'serum', lockCount);
-        bankedSerum += lockCount * MODES[gameMode].bankMult;
+      gameResultEl.textContent = secured + (secured===1 ? ' serum secured' : ' serums secured');
+      animateRemoval(lockItems, 'locking', function(){
+        removeItems(lockItems);
+        bankedSerum += secured;
         renderGameStatus();
-        if (!endPhase1Hand()) renderGameHand();
+        if(!endPhase1Hand()) layoutHand();
         finishResolve();
       });
       return;
     }
 
-    if (P > (S + B)) {
-      if (S === 0 && B === 0) {
-        var allIdxs = gameHandArr.map(function(_, i){ return i; });
+    if(P > (S+B)){
+      if(S===0 && B===0){
         gameResultEl.textContent = 'The rot takes the field';
-        animateRemoval(allIdxs, 'eaten', function(){
+        var allItems = gameHandArr.slice();
+        animateRemoval(allItems, 'eaten', function(){
           advanceToPhase2();
           finishResolve();
         });
         return;
       }
-      var eatCount = P - (S + B);
-      var eatIdxs = indexesOfLastN('plant', eatCount);
-      gameResultEl.textContent = eatCount + (eatCount === 1 ? ' deathcap devours itself' : ' deathcaps devour each other');
-      animateRemoval(eatIdxs, 'eaten', function(){
-        removeFaces(gameHandArr, 'plant', eatCount);
+      var eatCount = P - (S+B);
+      var eatItems = itemsOfLastN('plant', eatCount);
+      gameResultEl.textContent = eatCount + (eatCount===1 ? ' deathcap devours itself' : ' deathcaps devour each other');
+      animateRemoval(eatItems, 'eaten', function(){
+        removeItems(eatItems);
         renderGameStatus();
-        if (!endPhase1Hand()) renderGameHand();
+        if(!endPhase1Hand()) layoutHand();
         finishResolve();
       });
       return;
     }
 
     renderGameStatus();
-    if (!endPhase1Hand()) renderGameHand();
+    if(!endPhase1Hand()) layoutHand();
     finishResolve();
   }
 
   function processPhase2Roll(){
-    var B2 = countFace(gameHandArr, 'botanist');
-    var S2 = countFace(gameHandArr, 'serum');
-    var P2 = countFace(gameHandArr, 'plant');
-    var lockable = Math.min(B2, S2);
+    var B2 = countFace(gameHandArr,'botanist');
+    var S2 = countFace(gameHandArr,'serum');
+    var P2 = countFace(gameHandArr,'plant');
+    var lockable = Math.min(B2,S2);
     var total = bankedSerum + lockable * MODES[gameMode].bankMult;
-    pendingPoints = total - P2;
+    pendingPoints = total - (P2 + rotPenalty);
 
-    var lockIdxs = indexesOfLastN('serum', lockable);
-    animateRemoval(lockIdxs, 'locking', function(){
-      if (pendingPoints < 0) {
-        gameResultEl.textContent = 'The rot claims ' + Math.abs(pendingPoints) + (pendingPoints === -1 ? ' serum' : ' serums');
+    var lockItems = itemsOfLastN('serum', lockable);
+    animateRemoval(lockItems, 'locking', function(){
+      if(pendingPoints < 0){
+        gameResultEl.textContent = 'The rot claims ' + Math.abs(pendingPoints) + (pendingPoints===-1 ? ' serum' : ' serums');
       } else {
-        gameResultEl.textContent = 'Extraction yield: ' + pendingPoints + (pendingPoints === 1 ? ' serum' : ' serums');
+        gameResultEl.textContent = 'Extraction yield: ' + pendingPoints + (pendingPoints===1 ? ' serum' : ' serums');
       }
       phase2Rolled = true;
       rollHandBtn.disabled = true;
-      scoreTurnBtn.disabled = false;
       finishResolve();
     });
   }
 
+  function updateChopperBtn(){
+    if(gamePhase === 1){
+      scoreTurnBtn.textContent = 'Call chopper';
+      scoreTurnBtn.disabled = !(harvestRolls >= 1 && !awaitingResolve && !isAnimating);
+    } else {
+      scoreTurnBtn.textContent = 'Secure & pass';
+      scoreTurnBtn.disabled = !phase2Rolled;
+    }
+  }
+
   function finishResolve(){
     awaitingResolve = false;
-    if (!rollHandBtn.disabled) rollHandBtn.textContent = 'Roll';
+    if(!rollHandBtn.disabled) rollHandBtn.textContent = gamePhase===2 ? 'Extract' : 'Roll';
+    updateChopperBtn();
   }
 
   rollHandBtn.addEventListener('click', function(){
-    if (isAnimating) return;
-
-    if (!awaitingResolve) {
-      gameHandArr.forEach(function(d){ d.face = randomFace(); });
-      renderGameHand();
-      animateRoll(function(){
+    if(isAnimating) return;
+    if(!awaitingResolve){
+      if(gamePhase === 1){ harvestRolls++; renderGameStatus(); }
+      updateChopperBtn();
+      rollHand(function(){
         awaitingResolve = true;
         rollHandBtn.textContent = 'Resolve';
         rollHandBtn.classList.add('pulse');
@@ -1344,12 +1453,11 @@
       });
       return;
     }
-
     gameResultEl.textContent = '';
     rollHandBtn.classList.remove('pulse');
-    if (gamePhase === 1) {
+    if(gamePhase===1){
       processPhase1Roll();
-    } else if (!phase2Rolled) {
+    } else if(!phase2Rolled){
       processPhase2Roll();
     } else {
       finishResolve();
@@ -1357,27 +1465,341 @@
   });
 
   scoreTurnBtn.addEventListener('click', function(){
+    if(gamePhase === 1){
+      if(isAnimating || awaitingResolve || harvestRolls < 1) return;
+      gameHandArr = [];
+      beep(740, 0.1, 0.07, 'square');
+      setTimeout(function(){ beep(880, 0.14, 0.07, 'square'); }, 110);
+      advanceToPhase2();
+      finishResolve();
+      return;
+    }
+    if(!phase2Rolled) return;
     counters[currentTurn].applyScore(pendingPoints);
+    if(counters[currentTurn].getCount() >= 10){
+      document.getElementById('win-sub').textContent =
+        (currentTurn==='p1' ? 'Survivor 01' : 'Survivor 02') + ' walks out of the grove';
+      winOverlay.classList.add('open');
+      return;
+    }
     toggleTurn();
     startTurn();
   });
 
-  var modeBtn = document.getElementById('modeBtn');
-  var modeLabel = document.getElementById('modeLabel');
-  var modeBlurbs = {
-    1: 'V1: classic 2/2/2 die',
-    2: 'V2: 1 botanist, 3 deathcaps \u2014 locks bank 2',
-    3: 'V3: 1 botanist, 4 deathcaps \u2014 locks bank 4'
-  };
-  modeBtn.addEventListener('click', function(){
-    if (isAnimating) return;
-    gameMode = gameMode % 3 + 1;
-    modeLabel.textContent = 'V' + gameMode;
+  document.getElementById('playAgainBtn').addEventListener('click', function(){
+    winOverlay.classList.remove('open');
+    firstTurnOfGame = true;
+    counters.p1.reset();
+    counters.p2.reset();
+    currentTurn = 'p1';
+    renderTurn();
     startTurn();
-    gameResultEl.textContent = modeBlurbs[gameMode];
   });
 
+  // Version toggle UI removed; baseMode / MODES machinery kept for pandemic
+  // turns and any future mode selection. To restore V3 play, set baseMode = 3.
+
+  // ============================================================
+  // Camera orbit — drag to rotate, pinch/wheel to zoom
+  // ============================================================
+  var target = new THREE.Vector3(0, 0.7, 0);
+  var radius = 6.8, theta = Math.PI*0.18, phi = Math.PI*0.30;
+  var minPhi = 0.14, maxPhi = Math.PI/2 - 0.06;
+  var minRadius = 4.2, maxRadius = 15;
+  function updateCamera(){
+    var sp = Math.sin(phi);
+    camera.position.x = target.x + radius*sp*Math.sin(theta);
+    camera.position.z = target.z + radius*sp*Math.cos(theta);
+    camera.position.y = target.y + radius*Math.cos(phi);
+    camera.lookAt(target);
+  }
+  updateCamera();
+
+  // smooth camera tween (used for the extraction overhead shot)
+  var cameraAnim = null;
+  var savedView = { phi: phi, radius: radius };
+  function easeInOut(t){ return t<0.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2; }
+  function animateCameraTo(toRadius, toPhi, duration){
+    cameraAnim = {
+      start: performance.now(), dur: duration,
+      fromR: radius, toR: toRadius,
+      fromPhi: phi, toPhi: toPhi
+    };
+  }
+  function enterExtractionCam(){
+    savedView.phi = phi;
+    savedView.radius = radius;
+    animateCameraTo(7.6, 0.06, 320);
+  }
+  function exitExtractionCam(){
+    animateCameraTo(savedView.radius, savedView.phi, 1000);
+  }
+
+  var dragging=false, lastX=0, lastY=0, pinchDist=0;
+  var lastInteract = -3000; // negative so the idle orbit is already running at load
+  function noteInteract(){ lastInteract = performance.now(); cameraAnim = null; }
+  canvas.addEventListener('pointerdown', function(e){
+    dragging=true; lastX=e.clientX; lastY=e.clientY; noteInteract();
+    canvas.classList.add('dragging');
+    canvas.setPointerCapture(e.pointerId);
+  });
+  canvas.addEventListener('pointermove', function(e){
+    if(!dragging) return;
+    var dx=e.clientX-lastX, dy=e.clientY-lastY;
+    lastX=e.clientX; lastY=e.clientY;
+    noteInteract();
+    theta -= dx*0.006;
+    phi = Math.min(maxPhi, Math.max(minPhi, phi - dy*0.005));
+    updateCamera();
+  });
+  canvas.addEventListener('pointerup', function(){ dragging=false; canvas.classList.remove('dragging'); });
+  canvas.addEventListener('pointercancel', function(){ dragging=false; canvas.classList.remove('dragging'); });
+  canvas.addEventListener('wheel', function(e){
+    e.preventDefault();
+    noteInteract();
+    radius = Math.min(maxRadius, Math.max(minRadius, radius + e.deltaY*0.01));
+    updateCamera();
+  }, { passive:false });
+  canvas.addEventListener('touchstart', function(e){
+    if(e.touches.length===2){
+      pinchDist = Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY);
+    }
+  }, { passive:true });
+  canvas.addEventListener('touchmove', function(e){
+    if(e.touches.length===2){
+      var d = Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY);
+      noteInteract();
+      radius = Math.min(maxRadius, Math.max(minRadius, radius * (pinchDist/d)));
+      pinchDist = d;
+      updateCamera();
+      dragging = false;
+    }
+  }, { passive:true });
+
+  window.addEventListener('resize', function(){
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  // ============================================================
+  // Animate — 30fps cap, dice physics, breathing mushrooms, spores
+  // ============================================================
+  // pandemic tremors: occasional short camera shakes while infected
+  var shakeUntil = 0, shakeMag = 0, nextShakeAt = 0;
+
+  var clock = new THREE.Clock();
+  var TARGET_FPS = 30;
+  var FRAME_INTERVAL = 1000/TARGET_FPS;
+  var lastFrameTime = 0;
+
+  function animate(){
+    requestAnimationFrame(animate);
+    var nowRaw = performance.now();
+    if(nowRaw - lastFrameTime < FRAME_INTERVAL) return;
+    lastFrameTime = nowRaw - ((nowRaw - lastFrameTime) % FRAME_INTERVAL);
+
+    var dt = Math.min(clock.getDelta(), 0.05);
+    var now = performance.now();
+
+    // world dimmer: ease the grove darker for extraction, back up for harvest
+    var wantDark = (gamePhase===2) ? 1 : 0;
+    darkAmount += (wantDark - darkAmount) * Math.min(1, dt*2.2);
+    hemi.intensity = baseHemiI * (1 - darkAmount*0.62);
+    sun.intensity = baseSunI * (1 - darkAmount*0.7);
+    fill.intensity = baseFillI * (1 - darkAmount*0.5);
+    scene.fog.color.copy(baseFogColor).lerp(darkFogColor, darkAmount);
+
+    // extraction beacon: teal pulse over the dais during phase 2
+    extractionLight.intensity = (gamePhase===2)
+      ? 1.5 + Math.sin(now*0.004)*0.4
+      : Math.max(0, extractionLight.intensity - dt*2);
+
+    // hero mushrooms breathe and their maws glow
+    heroShrooms.forEach(function(h,i){
+      var b = Math.sin(now*0.0012 + h.phase);
+      h.cap.scale.y = (1.05 + b*0.05) * h.scale;
+      h.cap.position.y = h.capBaseY + b*0.03*h.scale;
+      h.group.rotation.z = Math.sin(now*0.0008 + h.phase)*0.02;
+      h.light.intensity = 0.7 + Math.sin(now*0.004 + i*2.4)*0.25 + Math.random()*0.08;
+      h.maw.scale.y = 1 + Math.max(0, Math.sin(now*0.0009 + h.phase*2))*0.5;
+    });
+
+    // spores drift upward
+    spores.forEach(function(p){
+      p.sprite.position.y += p.speed*dt;
+      p.sprite.position.x += Math.sin(now*0.001 + p.phase)*0.003;
+      p.sprite.material.opacity = 0.25 + Math.sin(now*0.002 + p.phase)*0.2;
+      if(p.sprite.position.y > p.topY){
+        p.sprite.position.y = 0.1;
+        var a = rand()*Math.PI*2, r = 1+rand()*11;
+        p.sprite.position.x = Math.cos(a)*r;
+        p.sprite.position.z = Math.sin(a)*r;
+      }
+    });
+
+    // dice toss physics
+    dicePool.forEach(function(d){
+      if(!d.active) return;
+      var t = Math.min(1, (now - d.startTime)/d.duration);
+      if(t<0) return;
+      var easedT = 1 - Math.pow(1-t,3);
+      d.mesh.position.x = THREE.MathUtils.lerp(d.startPos.x, d.targetPos.x, easedT);
+      d.mesh.position.z = THREE.MathUtils.lerp(d.startPos.z, d.targetPos.z, easedT);
+      var amp = (d.startPos.y - groundYDie) * Math.exp(-4.2*t);
+      d.mesh.position.y = groundYDie + Math.abs(Math.cos(t*15.5)) * amp;
+      if(t < 0.78){
+        var decay = 1 - t/0.78;
+        d.mesh.rotateOnAxis(d.spinAxis, d.spinSpeed*decay*dt);
+      } else {
+        d.mesh.quaternion.slerp(d.targetQuat, 0.18);
+      }
+      if(t>=1){
+        d.active = false;
+        d.settled = true;
+        d.mesh.position.copy(d.targetPos);
+        d.mesh.quaternion.copy(d.targetQuat);
+        sfxThud();
+      }
+    });
+
+    // pairwise separation while tumbling
+    var MIN_DIST = dieSize*1.08;
+    for(var i=0;i<dicePool.length;i++){
+      for(var j=i+1;j<dicePool.length;j++){
+        var a = dicePool[i], b = dicePool[j];
+        if((!a.active && !b.active) || a.hidden || b.hidden) continue;
+        var dx = b.mesh.position.x - a.mesh.position.x;
+        var dz = b.mesh.position.z - a.mesh.position.z;
+        var distSq = dx*dx + dz*dz;
+        if(distSq > 0.000001 && distSq < MIN_DIST*MIN_DIST){
+          var dist = Math.sqrt(distSq);
+          var overlap = MIN_DIST - dist;
+          var nx = dx/dist, nz = dz/dist;
+          var aShare = (a.active && b.active) ? 0.5 : (a.active ? 1 : 0);
+          var bShare = (a.active && b.active) ? 0.5 : (b.active ? 1 : 0);
+          a.mesh.position.x -= nx*overlap*aShare;
+          a.mesh.position.z -= nz*overlap*aShare;
+          b.mesh.position.x += nx*overlap*bShare;
+          b.mesh.position.z += nz*overlap*bShare;
+        }
+      }
+    }
+
+    // removal animations: serums float up teal, deathcaps get crunched
+    for(var ri2=removalAnims.length-1; ri2>=0; ri2--){
+      var ra2 = removalAnims[ri2];
+      var rt = (now - ra2.start)/ra2.dur;
+      if(rt<0) continue;
+      if(rt>=1){
+        ra2.die.mesh.visible = false;
+        ra2.die.hidden = true;
+        ra2.die.mesh.scale.set(1,1,1);
+        removalAnims.splice(ri2,1);
+        continue;
+      }
+      var m = ra2.die.mesh;
+      if(ra2.kind==='locking'){
+        m.position.y = groundYDie + rt*1.6;
+        m.rotation.y += dt*6;
+        var s = 1 - rt*0.7;
+        m.scale.set(s,s,s);
+      } else {
+        var sq = 1 - rt;
+        m.scale.set(1+rt*0.3, Math.max(0.02, sq*sq), 1+rt*0.3);
+        m.position.y = groundYDie - rt*0.2;
+        m.rotation.z = Math.sin(rt*20)*0.15;
+      }
+    }
+
+    // rope ladders: drop in for extraction, hoist away for harvest
+    ropeLadders.forEach(function(p){
+      var targetY = (gamePhase===2) ? p.dropY : p.retractY;
+      var gy = p.group.position.y;
+      if(Math.abs(gy - targetY) > 0.01){
+        p.group.visible = true;
+        p.group.position.y = gy + (targetY - gy) * Math.min(1, dt*p.rate);
+      } else if(gamePhase!==2){
+        p.group.visible = false;
+      }
+      if(p.group.visible){
+        // dangling sway, a touch stronger while in the chopper's downdraft
+        p.group.rotation.z = Math.sin(now*0.0012 + p.sway)*0.045;
+        p.group.rotation.x = Math.sin(now*0.0009 + p.sway*2)*0.035;
+      }
+    });
+
+    // roaming chopper searchlights sweeping the grove floor
+    if(groundSpots){
+      groundSpots.forEach(function(gs, gi){
+        var wantI = (gamePhase===2) ? 2.8 : 0;
+        gs.spot.intensity += (wantI - gs.spot.intensity) * Math.min(1, dt*3);
+        var on = gs.spot.intensity > 0.05;
+        gs.pool.visible = on;
+        if(on){
+          var tx = Math.sin(now*gs.speedA + gs.phase) * gs.rangeA;
+          var tz = Math.cos(now*gs.speedB + gs.phase*1.7) * gs.rangeB;
+          gs.tgt.position.set(tx, terrainHeight(tx,tz), tz);
+          gs.spot.position.set(tx*0.3, 11, tz*0.3);
+          gs.pool.position.set(tx, terrainHeight(tx,tz)+0.04, tz);
+          gs.pool.material.opacity = (gs.spot.intensity/2.8) * (0.34 + Math.sin(now*0.003+gi)*0.06);
+        }
+      });
+    }
+
+    // rescue searchlight: snaps on for extraction, drifts like a hovering pilot
+    if(rescueLight){
+      var wantI = (gamePhase===2) ? 1.5 : 0;
+      rescueLight.intensity += (wantI - rescueLight.intensity) * Math.min(1, dt*3);
+      if(rescueLight.intensity > 0.02){
+        rescueLight.position.x = Math.sin(now*0.0006)*0.8;
+        rescueLight.position.z = Math.cos(now*0.00047)*0.8;
+        rescueTarget.position.x = Math.sin(now*0.0009)*0.5;
+        rescueTarget.position.z = Math.cos(now*0.0007)*0.5;
+      }
+    }
+
+    // camera tween: swing overhead for extraction, back down after
+    if(cameraAnim){
+      var ct = Math.min(1, (now - cameraAnim.start)/cameraAnim.dur);
+      var ce = easeInOut(ct);
+      radius = cameraAnim.fromR + (cameraAnim.toR - cameraAnim.fromR)*ce;
+      phi = cameraAnim.fromPhi + (cameraAnim.toPhi - cameraAnim.fromPhi)*ce;
+      updateCamera();
+      if(ct>=1) cameraAnim = null;
+    }
+
+    // idle drift: slowly circle the dais while the player mulls it over
+    if(!dragging && now - lastInteract > 3000){
+      theta += dt*0.055;
+      updateCamera();
+    }
+
+    // pandemic camera tremors
+    if(pandemicTurn){
+      if(now > nextShakeAt && now > shakeUntil){
+        shakeUntil = now + 380 + Math.random()*320;
+        shakeMag = 0.04 + Math.random()*0.05;
+        nextShakeAt = now + 2800 + Math.random()*4200;
+        beep(60 + Math.random()*20, 0.3, 0.06, 'sine');
+      }
+      if(now < shakeUntil){
+        var falloff = (shakeUntil - now) / 700;
+        camera.position.x += (Math.random()-0.5) * shakeMag * falloff * 2;
+        camera.position.y += (Math.random()-0.5) * shakeMag * falloff * 2;
+        camera.position.z += (Math.random()-0.5) * shakeMag * falloff * 2;
+      }
+    } else {
+      shakeUntil = 0;
+      nextShakeAt = now + 1500;
+    }
+
+    renderer.render(scene, camera);
+  }
+
+  renderTurn();
   startTurn();
+  animate();
 })();
 </script>
 </body>
