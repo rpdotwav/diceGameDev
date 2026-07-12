@@ -82,50 +82,71 @@
   /* ---------- HUD chrome ---------- */
   .hud{ position:fixed; z-index:20; }
 
-  #head{
-    top:calc(10px + env(safe-area-inset-top)); left:14px;
-    pointer-events:none;
+  #topbar{
+    top:0; left:0; right:0;
+    padding-top:calc(8px + env(safe-area-inset-top));
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding-left:14px; padding-right:14px; padding-bottom:8px;
+    background:linear-gradient(175deg, rgba(22,31,19,0.92), rgba(9,14,7,0.94));
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line-strong);
+    box-shadow:0 8px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(184,230,63,0.1);
+    cursor:pointer;
   }
-  #head .eyebrow{
-    font-size:9px; letter-spacing:2.4px; text-transform:uppercase; color:var(--toxin-dim);
-    margin-bottom:2px;
+  #topbar:active{ filter:brightness(1.08); }
+  #topbar-title{ min-width:0; }
+  #topbar-title .eyebrow{
+    font-size:8.5px; letter-spacing:2px; text-transform:uppercase; color:var(--toxin-dim);
+    margin-bottom:1px; white-space:nowrap;
   }
-  #head h1{
+  #topbar-title h1{
     margin:0;
     font-family:'Chakra Petch', sans-serif; font-weight:700;
-    font-size:26px; line-height:1; letter-spacing:2px; text-transform:uppercase;
-    color:var(--maw);
-    transform:rotate(-1.2deg); transform-origin:left bottom;
+    font-size:20px; line-height:1; letter-spacing:1.5px; text-transform:uppercase;
+    color:var(--maw); white-space:nowrap;
     text-shadow:
-      0 1px 0 #a3323a, 0 2px 0 #8a262e, 0 3px 0 #701c23, 0 4px 0 #571318,
-      0 6px 8px rgba(0,0,0,0.7), 0 0 22px var(--glow-maw);
+      0 1px 0 #a3323a, 0 2px 0 #8a262e, 0 3px 0 #701c23,
+      0 5px 7px rgba(0,0,0,0.7), 0 0 18px var(--glow-maw);
   }
-  #head .sub{
-    font-size:9px; letter-spacing:1.3px; text-transform:uppercase; color:var(--ash); margin-top:4px;
+  #topbar-title .sub{
+    font-size:8.5px; letter-spacing:1px; text-transform:uppercase; color:var(--ash); margin-top:2px; white-space:nowrap;
   }
-
-  #chips{
-    top:calc(10px + env(safe-area-inset-top)); right:12px;
-    display:flex; flex-direction:column; gap:6px; align-items:stretch;
-  }
-  .chip-btn{
-    display:flex; align-items:center; gap:6px;
-    min-height:36px; padding:7px 11px;
+  #mode-toggle{
+    flex:0 0 auto;
+    min-height:26px; padding:5px 10px;
     background:linear-gradient(180deg, rgba(34,48,24,0.9), rgba(19,28,14,0.92));
-    border:1px solid var(--line-strong); border-radius:9px;
-    color:var(--bone);
-    font-family:'IBM Plex Mono', monospace; font-size:10.5px; font-weight:500;
-    letter-spacing:1px; text-transform:uppercase; cursor:pointer;
-    box-shadow:0 3px 0 #060a05, 0 5px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(184,230,63,0.16);
-    transition:border-color .15s, box-shadow .12s, transform .1s, filter .15s;
+    border:1px solid var(--line-strong); border-radius:14px;
+    color:var(--ash);
+    font-family:'IBM Plex Mono', monospace; font-size:9.5px; font-weight:600;
+    letter-spacing:1.2px; text-transform:uppercase; cursor:pointer;
+    box-shadow:0 2px 0 #060a05, inset 0 1px 0 rgba(184,230,63,0.14);
+    transition:border-color .15s, color .15s, transform .1s;
   }
-  .chip-btn:hover{ border-color:var(--toxin-dim); filter:brightness(1.12); }
-  .chip-btn:active{ transform:translateY(2px); box-shadow:0 1px 0 #060a05, inset 0 1px 0 rgba(184,230,63,0.12); }
-  .chip-btn svg{ width:13px; height:13px; flex:0 0 auto; }
+  #mode-toggle:hover{ border-color:var(--toxin-dim); color:var(--toxin); }
+  #mode-toggle:active{ transform:translateY(1px); }
+  #topbar-scores{ display:flex; align-items:center; gap:16px; flex:0 0 auto; }
+  #topbar-scores.solo #counterP2{ display:none; }
+  .tb-turns{ display:none; flex-direction:column; align-items:center; gap:1px; }
+  #topbar-scores.solo .tb-turns{ display:flex; }
+  #breaker.hidden{ display:none; }
+  .tb-counter{ display:flex; flex-direction:column; align-items:center; gap:1px; }
+  .tb-label{ font-size:8px; letter-spacing:1.3px; text-transform:uppercase; color:var(--ash); }
+  .tb-value{
+    font-family:'Chakra Petch', sans-serif; font-weight:700; font-size:26px; line-height:1;
+    background:linear-gradient(180deg, #e8fffb 0%, var(--serum) 45%, #2e8c81 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    filter:drop-shadow(0 0 8px var(--glow-serum)) drop-shadow(0 1px 2px rgba(0,0,0,0.6));
+    cursor:pointer; padding:1px 4px; transition:transform .12s, filter .2s;
+    opacity:0.55;
+  }
+  .tb-counter.live .tb-value{ opacity:1; }
+  .tb-counter.live .tb-label{ color:var(--toxin-dim); }
+  .tb-value:hover{ transform:scale(1.08); }
+  .tb-value:active{ transform:scale(0.94); }
 
   /* ---------- Turn breaker ---------- */
   #breaker{
-    top:calc(10px + env(safe-area-inset-top)); left:50%; transform:translateX(-50%);
+    top:calc(66px + env(safe-area-inset-top)); left:50%; transform:translateX(-50%);
     display:flex; align-items:center; gap:10px;
     padding:8px 12px;
     background:
@@ -152,51 +173,6 @@
     transition:left .22s cubic-bezier(.34,1.56,.64,1);
   }
   .brk-switch.right .brk-knob{ left:37px; }
-
-  /* ---------- Counters ---------- */
-  .counter{
-    position:fixed; z-index:20;
-    display:flex; flex-direction:column; align-items:center; gap:5px;
-    padding:10px 10px 9px; width:96px;
-    background:linear-gradient(175deg, rgba(30,42,24,0.82), rgba(13,19,10,0.9));
-    border:1px solid var(--line); border-radius:13px;
-    box-shadow:0 6px 16px rgba(0,0,0,0.45), inset 0 1px 0 rgba(184,230,63,0.12);
-    transition:border-color .25s, box-shadow .25s, transform .25s;
-  }
-  .counter.live{
-    border-color:var(--toxin-dim);
-    box-shadow:0 8px 20px rgba(0,0,0,0.5), 0 0 20px rgba(184,230,63,0.15), inset 0 1px 0 rgba(184,230,63,0.2);
-    transform:translateY(-2px);
-  }
-  #counterP1{ left:12px; top:calc(84px + env(safe-area-inset-top)); }
-  #counterP2{ left:116px; top:calc(84px + env(safe-area-inset-top)); }
-  .counter-label{ font-size:9px; letter-spacing:1.6px; text-transform:uppercase; color:var(--ash); }
-  .counter-value{
-    font-family:'Chakra Petch', sans-serif; font-weight:700; font-size:34px; line-height:1;
-    background:linear-gradient(180deg, #e8fffb 0%, var(--serum) 45%, #2e8c81 100%);
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-    filter:drop-shadow(0 0 10px var(--glow-serum)) drop-shadow(0 2px 2px rgba(0,0,0,0.6));
-    cursor:pointer; padding:2px 8px; transition:transform .12s;
-  }
-  .counter-value:hover{ transform:scale(1.06); }
-  .counter-value:active{ transform:scale(0.96); }
-  .input-row{ display:flex; align-items:center; gap:5px; }
-  .counter-input{
-    width:40px; min-height:26px;
-    font-family:'IBM Plex Mono', monospace; font-size:11px; text-align:center;
-    background:rgba(0,0,0,0.4); border:1px solid var(--line); border-radius:6px;
-    color:var(--bone); padding:3px 2px; outline:none;
-  }
-  .counter-input:focus{ border-color:var(--serum); box-shadow:0 0 8px var(--glow-serum); }
-  .counter-input::placeholder{ color:var(--ash); opacity:0.7; }
-  .recycle-btn{
-    flex:0 0 auto; width:26px; height:26px; border-radius:6px;
-    border:1px solid var(--line); background:rgba(0,0,0,0.3); color:var(--bone);
-    font-size:11px; line-height:1; display:flex; align-items:center; justify-content:center;
-    cursor:pointer; padding:0; transition:border-color .15s, transform .08s;
-  }
-  .recycle-btn:hover{ border-color:var(--toxin-dim); }
-  .recycle-btn:active{ transform:scale(0.93); }
 
   /* ---------- Bottom console ---------- */
   #console{
@@ -342,14 +318,12 @@
   #win-sub{ text-align:center; font-size:11.5px; letter-spacing:1.2px; color:var(--ash); text-transform:uppercase; margin:0 0 18px; }
 
   @media (max-width:560px){
-    #head h1{ font-size:20px; }
-    #head .sub{ display:none; }
+    #topbar-title h1{ font-size:16px; }
+    #topbar-title .sub{ display:none; }
+    #topbar-scores{ gap:10px; }
+    .tb-value{ font-size:21px; }
     #breaker{ top:auto; bottom:calc(178px + env(safe-area-inset-bottom)); padding:6px 10px; }
     .brk-name{ font-size:9.5px; }
-    #counterP1{ top:calc(64px + env(safe-area-inset-top)); }
-    #counterP2{ left:102px; top:calc(64px + env(safe-area-inset-top)); }
-    .counter{ width:84px; padding:8px 8px 7px; }
-    .counter-value{ font-size:28px; }
   }
 </style>
 </head>
@@ -365,21 +339,27 @@
 </div>
 <div id="scanlines"></div>
 
-<div class="hud" id="head">
-  <div class="eyebrow">A carnivorous fungus feature</div>
-  <h1>Deathcap 3D</h1>
-  <div class="sub">The rot is spreading &middot; drag to look around</div>
-</div>
-
-<div class="hud" id="chips">
-  <button class="chip-btn" id="customizeBtn">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
-    Faces
-  </button>
-  <button class="chip-btn" id="rulesBtn">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.5 9a2.5 2.5 0 0 1 4.7 1.2c0 1.6-2.2 1.8-2.2 3.4"></path><line x1="12" y1="17" x2="12" y2="17.01"></line></svg>
-    Rules
-  </button>
+<div class="hud" id="topbar" role="button" tabindex="0" aria-label="Open field manual">
+  <div id="topbar-title">
+    <div class="eyebrow">A carnivorous fungus feature</div>
+    <h1>Deathcap 3D</h1>
+    <div class="sub">The rot is spreading</div>
+  </div>
+  <button id="mode-toggle" aria-label="Toggle solo mode">1P</button>
+  <div id="topbar-scores">
+    <div class="tb-counter live" id="counterP1">
+      <div class="tb-label">Survivor 01</div>
+      <div class="tb-value" id="p1Value" role="button" tabindex="0" aria-label="Survivor 01 score">0</div>
+    </div>
+    <div class="tb-counter" id="counterP2">
+      <div class="tb-label">Survivor 02</div>
+      <div class="tb-value" id="p2Value" role="button" tabindex="0" aria-label="Survivor 02 score">0</div>
+    </div>
+    <div class="tb-turns" id="soloTurns">
+      <div class="tb-label">Turn</div>
+      <div class="tb-value" id="soloTurnValue" style="opacity:1;">1</div>
+    </div>
+  </div>
 </div>
 
 <div class="hud" id="breaker">
@@ -388,23 +368,6 @@
     <div class="brk-knob"></div>
   </div>
   <span class="brk-name" id="brkP2">S-02</span>
-</div>
-
-<div class="counter live" id="counterP1">
-  <div class="counter-label">Survivor 01</div>
-  <div class="counter-value" id="p1Value" role="button" tabindex="0">0</div>
-  <div class="input-row">
-    <input class="counter-input" id="p1Input" type="text" inputmode="numeric" placeholder="Set">
-    <button class="recycle-btn" id="p1Recycle" aria-label="Reset player 1 score">&#9851;</button>
-  </div>
-</div>
-<div class="counter" id="counterP2">
-  <div class="counter-label">Survivor 02</div>
-  <div class="counter-value" id="p2Value" role="button" tabindex="0">0</div>
-  <div class="input-row">
-    <input class="counter-input" id="p2Input" type="text" inputmode="numeric" placeholder="Set">
-    <button class="recycle-btn" id="p2Recycle" aria-label="Reset player 2 score">&#9851;</button>
-  </div>
 </div>
 
 <div class="hud" id="console">
@@ -446,17 +409,17 @@
       <h3>Phase 1 &mdash; Harvest</h3>
       <p>Roll a hand of 5. After every roll:</p>
       <ul>
-        <li>If the hand has <strong>at least 1 Botanist and 1 Serum</strong>, lock away <strong>min(Botanists, Serums)</strong> Serum dice &mdash; secured for Phase 2. Botanists stay in hand.</li>
+        <li>If the hand has <strong>at least 1 Botanist and 1 Serum</strong>, the botanist sweeps the field: <strong>every Serum die in the hand</strong> is locked away and secured for Phase 2. Botanists stay in hand.</li>
         <li>Otherwise, if <em>Deathcaps outnumber</em> Serums + Botanists in hand, the excess Deathcaps are discarded (no scoring effect).</li>
         <li>If the hand ever goes <em>all Deathcaps</em>, the rot takes the field &mdash; Phase 1 ends immediately. Anything already secured carries forward.</li>
         <li>Reroll what's left and repeat until only 1 die remains, then Phase 1 ends.</li>
       </ul>
       <h3>Calling the chopper</h3>
-      <p>After any resolved Harvest roll you may hit <strong>Call chopper</strong> to end Harvest immediately and move to Extraction. But loitering is dangerous: your first <strong>3</strong> Harvest rolls are safe &mdash; every roll beyond that adds <em>+1 phantom deathcap</em> to your Extraction count as the rot overruns the landing zone. Bank greedily or fly out clean; that's the game.</p>
+      <p>After any resolved Harvest roll you may hit <strong>Call chopper</strong> to end Harvest immediately and move to Extraction. But loitering is dangerous: your first <strong>3</strong> Harvest rolls are safe &mdash; beyond that, every <strong>two</strong> extra rolls add <em>+1 phantom deathcap</em> to your Extraction count as the rot overruns the landing zone. Bank greedily or fly out clean; that's the game.</p>
       <h3>Phase 2 &mdash; Extraction</h3>
       <p>Roll a fresh hand of 5, once only:</p>
       <ul>
-        <li>Botanists and Serums together make up to <strong>min(Botanists, Serums)</strong> Serums lockable.</li>
+        <li>Under the chopper there's only time to pair up: <strong>min(Botanists, Serums)</strong> Serums are lockable &mdash; no field sweep here.</li>
         <li>Total Serum = secured in Phase 1 + lockable from this roll (times the version's banking rate).</li>
         <li><strong>Points this turn = Total Serum &minus; Deathcaps in this roll</strong>. If Deathcaps outnumber your serums, the difference is <em>subtracted from your score</em> &mdash; but your score never drops below zero.</li>
       </ul>
@@ -469,6 +432,8 @@
         <li><strong>Standard conditions:</strong> 1 Botanist / 3 Deathcap / 2 Serum faces, locks bank <strong>2</strong>. Big jackpots, nasty losses.</li>
         <li><strong>Pandemic conditions:</strong> 1 Botanist / 4 Deathcap / 1 Serum, locks bank <strong>4</strong>. Pure chaos &mdash; one lucky pairing can win the game outright.</li>
       </ul>
+      <h3>Solo mode</h3>
+      <p>Tap the <strong>1P/2P</strong> button in the top bar to play alone. There's no opponent and no turn limit &mdash; instead the bloom itself is the clock: pandemic odds start lower but <em>climb every turn you're still in the grove</em>, capping out around <strong>75%</strong>. Reach 10 as fast as you can. On cure, you're shown your turn count against <strong>par (7 turns)</strong>.</p>
       <h3>&#9763; Pandemic mode</h3>
       <p>Every turn after the first has roughly a <strong>2-in-7 chance</strong> the bloom surges: that turn is played under <em>pandemic conditions</em> &mdash; the deadlier die and the 4x banking rate &mdash; announced at the start of the turn, with tremors shaking the grove. It lasts one turn, then conditions settle.</p>
     </div>
@@ -878,6 +843,10 @@
   var gameMode = 2;
   var pandemicTurn = false;
   var firstTurnOfGame = true;
+  var soloMode = true;
+  var soloTurnCount = 0;
+  var PAR_TURNS = 7;
+  var PANDEMIC_BASE = 0.15, PANDEMIC_GROWTH = 0.07, PANDEMIC_CAP = 0.75;
   function modeMaterials(){
     return MODES[gameMode].faces.map(function(t){ return faceMaterialCache[t]; });
   }
@@ -1024,26 +993,16 @@
   // ============================================================
   // HUD wiring: counters, breaker, chips, modals
   // ============================================================
-  function setupCounter(valueEl, inputEl, recycleBtn){
+  function setupCounter(valueEl){
     var count = 0;
     function render(){ valueEl.textContent = count; }
     function bump(d){ count += d; render(); }
     function setTo(n){ if(!isNaN(n)){ count = Math.trunc(n); render(); } }
-    valueEl.addEventListener('click', function(){ bump(1); });
-    valueEl.addEventListener('contextmenu', function(e){ e.preventDefault(); bump(-1); });
+    valueEl.addEventListener('click', function(e){ e.stopPropagation(); bump(1); });
+    valueEl.addEventListener('contextmenu', function(e){ e.preventDefault(); e.stopPropagation(); bump(-1); });
     valueEl.addEventListener('keydown', function(e){
       if(e.key==='Enter'||e.key===' '){ e.preventDefault(); bump(1); }
     });
-    recycleBtn.addEventListener('click', function(){ setTo(0); });
-    function commit(){
-      var n = parseInt(inputEl.value,10);
-      if(!isNaN(n)) setTo(n);
-      inputEl.value='';
-    }
-    inputEl.addEventListener('keydown', function(e){
-      if(e.key==='Enter'){ e.preventDefault(); commit(); inputEl.blur(); }
-    });
-    inputEl.addEventListener('blur', function(){ if(inputEl.value!=='') commit(); });
     render();
     return {
       applyScore: function(n){ setTo(Math.max(0, count+n)); },
@@ -1052,8 +1011,8 @@
     };
   }
   var counters = {
-    p1: setupCounter(document.getElementById('p1Value'), document.getElementById('p1Input'), document.getElementById('p1Recycle')),
-    p2: setupCounter(document.getElementById('p2Value'), document.getElementById('p2Input'), document.getElementById('p2Recycle'))
+    p1: setupCounter(document.getElementById('p1Value')),
+    p2: setupCounter(document.getElementById('p2Value'))
   };
 
   var turnSwitch = document.getElementById('turnSwitch');
@@ -1073,6 +1032,28 @@
     renderGameStatus();
   }
   function toggleTurn(){ currentTurn = currentTurn==='p1' ? 'p2' : 'p1'; renderTurn(); }
+
+  var modeToggleBtn = document.getElementById('mode-toggle');
+  var topbarScoresEl = document.getElementById('topbar-scores');
+  var breakerEl = document.getElementById('breaker');
+  function applyModeUI(){
+    modeToggleBtn.textContent = soloMode ? '1P' : '2P';
+    topbarScoresEl.classList.toggle('solo', soloMode);
+    breakerEl.classList.toggle('hidden', soloMode);
+  }
+  modeToggleBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    soloMode = !soloMode;
+    firstTurnOfGame = true;
+    soloTurnCount = 0;
+    counters.p1.reset();
+    counters.p2.reset();
+    currentTurn = 'p1';
+    applyModeUI();
+    renderTurn();
+    startTurn();
+  });
+  applyModeUI();
   turnSwitch.addEventListener('click', toggleTurn);
   turnSwitch.addEventListener('keydown', function(e){
     if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleTurn(); }
@@ -1125,14 +1106,18 @@
     reader.readAsDataURL(file);
   });
 
-  document.getElementById('customizeBtn').addEventListener('click', function(){ customizeOverlay.classList.add('open'); });
+  // Faces button removed for now; customize modal/logic left in place for later.
   document.getElementById('closeCustomize').addEventListener('click', function(){ customizeOverlay.classList.remove('open'); });
   customizeOverlay.addEventListener('click', function(e){ if(e.target===customizeOverlay) customizeOverlay.classList.remove('open'); });
   document.getElementById('clearFacesBtn').addEventListener('click', function(){
     faceOrder.forEach(function(t){ faceImages[t]=null; });
     rebuildFaceMaterials(); refreshDiceMaterials(); buildFaceGrid();
   });
-  document.getElementById('rulesBtn').addEventListener('click', function(){ rulesOverlay.classList.add('open'); });
+  var topbar = document.getElementById('topbar');
+  topbar.addEventListener('click', function(){ rulesOverlay.classList.add('open'); });
+  topbar.addEventListener('keydown', function(e){
+    if(e.key==='Enter'||e.key===' '){ e.preventDefault(); rulesOverlay.classList.add('open'); }
+  });
   document.getElementById('closeRules').addEventListener('click', function(){ rulesOverlay.classList.remove('open'); });
   rulesOverlay.addEventListener('click', function(e){ if(e.target===rulesOverlay) rulesOverlay.classList.remove('open'); });
   document.addEventListener('keydown', function(e){
@@ -1190,7 +1175,7 @@
     gameResultEl.classList.toggle('extraction', gamePhase===2 && !pandemicTurn);
     gamePhaseLabel.textContent = phaseNames[gamePhase];
     var rotEl = document.getElementById('rotPressure');
-    var pen = (gamePhase===1) ? Math.max(0, harvestRolls - SAFE_ROLLS) : rotPenalty;
+    var pen = (gamePhase===1) ? Math.ceil(Math.max(0, harvestRolls - SAFE_ROLLS) / 2) : rotPenalty;
     if(pen > 0){
       rotEl.textContent = '\u2620 rot +' + pen;
     } else if(gamePhase===1 && harvestRolls === SAFE_ROLLS){
@@ -1216,7 +1201,10 @@
   function startTurn(){
     if(gamePhase === 2) exitExtractionCam();
     // 1-in-5 turns, the bloom surges: V2 turns play as V3 "pandemic mode"
-    pandemicTurn = (!firstTurnOfGame && baseMode === 2 && Math.random() < 0.28);
+    var pandemicChance = soloMode
+      ? Math.min(PANDEMIC_CAP, PANDEMIC_BASE + PANDEMIC_GROWTH * soloTurnCount)
+      : 0.28;
+    pandemicTurn = (!firstTurnOfGame && baseMode === 2 && Math.random() < pandemicChance);
     firstTurnOfGame = false;
     gameMode = pandemicTurn ? 3 : baseMode;
     refreshDiceMaterials();
@@ -1247,12 +1235,14 @@
       d.mesh.position.copy(restPositions[i]);
       d.mesh.rotation.set(rand()*Math.PI, rand()*Math.PI, rand()*Math.PI);
     });
+    var soloTurnValEl = document.getElementById('soloTurnValue');
+    if(soloTurnValEl) soloTurnValEl.textContent = soloTurnCount + 1;
     renderGameStatus();
   }
 
   function advanceToPhase2(){
     gamePhase = 2;
-    rotPenalty = Math.max(0, harvestRolls - SAFE_ROLLS);
+    rotPenalty = Math.ceil(Math.max(0, harvestRolls - SAFE_ROLLS) / 2);
     gameHandArr = makeHand();
     gameResultEl.textContent = rotPenalty > 0
       ? 'Extraction \u2014 the rot overran the LZ (+' + rotPenalty + ' deathcap' + (rotPenalty===1?'':'s') + ')'
@@ -1260,6 +1250,7 @@
     updateChopperBtn();
     enterExtractionCam();
     rollHandBtn.textContent = 'Extract';
+    rollHandBtn.disabled = true;
     beep(520, 0.18, 0.07, 'triangle');
     setTimeout(function(){ beep(690, 0.22, 0.07, 'triangle'); }, 140);
     dicePool.forEach(function(d,i){
@@ -1360,9 +1351,8 @@
     var B = countFace(gameHandArr,'botanist');
     var S = countFace(gameHandArr,'serum');
     var P = countFace(gameHandArr,'plant');
-
     if(B>=1 && S>=1){
-      var lockCount = Math.min(B,S);
+      var lockCount = S; // a botanist on site sweeps every serum in the hand
       var lockItems = itemsOfLastN('serum', lockCount);
       var secured = lockCount * MODES[gameMode].bankMult;
       gameResultEl.textContent = secured + (secured===1 ? ' serum secured' : ' serums secured');
@@ -1476,19 +1466,32 @@
     }
     if(!phase2Rolled) return;
     counters[currentTurn].applyScore(pendingPoints);
+    if(soloMode) soloTurnCount++;
     if(counters[currentTurn].getCount() >= 10){
-      document.getElementById('win-sub').textContent =
-        (currentTurn==='p1' ? 'Survivor 01' : 'Survivor 02') + ' walks out of the grove';
+      if(soloMode){
+        var diff = PAR_TURNS - soloTurnCount;
+        var parLine = diff > 0
+          ? ('Beat par by ' + diff + (diff===1 ? ' turn' : ' turns'))
+          : diff === 0
+            ? 'Right on par'
+            : ((-diff) + ((-diff)===1 ? ' turn' : ' turns') + ' over par');
+        document.getElementById('win-sub').textContent =
+          'Cured in ' + soloTurnCount + ' turns \u2014 ' + parLine + ' (par ' + PAR_TURNS + ')';
+      } else {
+        document.getElementById('win-sub').textContent =
+          (currentTurn==='p1' ? 'Survivor 01' : 'Survivor 02') + ' walks out of the grove';
+      }
       winOverlay.classList.add('open');
       return;
     }
-    toggleTurn();
+    if(!soloMode) toggleTurn();
     startTurn();
   });
 
   document.getElementById('playAgainBtn').addEventListener('click', function(){
     winOverlay.classList.remove('open');
     firstTurnOfGame = true;
+    soloTurnCount = 0;
     counters.p1.reset();
     counters.p2.reset();
     currentTurn = 'p1';
@@ -1503,7 +1506,7 @@
   // Camera orbit — drag to rotate, pinch/wheel to zoom
   // ============================================================
   var target = new THREE.Vector3(0, 0.7, 0);
-  var radius = 6.8, theta = Math.PI*0.18, phi = Math.PI*0.30;
+  var radius = 7.8, theta = Math.PI*0.18, phi = Math.PI*0.21;
   var minPhi = 0.14, maxPhi = Math.PI/2 - 0.06;
   var minRadius = 4.2, maxRadius = 15;
   function updateCamera(){
@@ -1769,11 +1772,6 @@
       if(ct>=1) cameraAnim = null;
     }
 
-    // idle drift: slowly circle the dais while the player mulls it over
-    if(!dragging && now - lastInteract > 3000){
-      theta += dt*0.055;
-      updateCamera();
-    }
 
     // pandemic camera tremors
     if(pandemicTurn){
